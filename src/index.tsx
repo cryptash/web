@@ -4,9 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// @ts-ignore
+import {BrowserRouter, Route, Link} from 'react-router-dom';
+import Login from './Pages/Login/Login';
+import Home from './Pages/Home/Home';
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/login' component={Login}/>
+      </App>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

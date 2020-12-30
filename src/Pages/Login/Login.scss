@@ -1,0 +1,105 @@
+.login_main {
+  background: #F2F2F2;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  &__header {
+    margin: auto auto 0 auto;
+  }
+  h1 {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 28px;
+    line-height: 33px;
+    margin: auto;
+  }
+  h2 {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 21px;
+    opacity: 0.5;
+    margin: 10px auto;
+  }
+  &__block {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
+    border-radius: 3px;
+    width: 320px;
+    height: 280px;
+    margin: 20px auto auto auto;
+  }
+  &__form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    h1 {
+      margin: 15px auto;
+    }
+    h3 {
+      font-weight: 400;
+      margin: 20px auto;
+    }
+    h4 {
+      font-weight: 300;
+      margin: 5px auto
+    }
+    &___username {
+      margin: 10px auto 10px auto;
+    }
+    &___password {
+      margin: 5px auto 0 auto;
+    }
+    &___submit {
+      margin: 15px auto 0 auto;
+    }
+    &___privatekey {
+      margin: 15px auto 0 auto;
+    }
+    input {
+      background: #FFFFFF;
+      border: 2px solid #DDDDDD;
+      box-sizing: border-box;
+      border-radius: 2px;
+      height: 42px;
+      width: 280px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      padding: 15px;
+      line-height: 19px;
+    }
+    button {
+      background: #4CA5FF;
+      border-radius: 2px;
+      cursor: pointer;
+      width: 280px;
+      height: 46px;
+      color: white;
+      font-weight: 500;
+      border:none;
+      font-size: 16px;
+      outline: none;
+    }
+    a {
+      margin-top: 11px;
+      color: #ADADAD;
+      text-decoration: none;
+      &:hover {
+        color: #4CA5FF;
+      }
+      &:visited {
+        color: #ADADAD;
+      }
+      &:focus {
+        color: #4CA5FF;
+      }
+    }
+  }
+}
