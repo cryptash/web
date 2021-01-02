@@ -1,41 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import { Spin } from 'antd';
 import {Redirect} from 'react-router-dom';
 import Preloader from "../../Components/Preloader/Preloader";
+import config from '../../config'
+import Chat from '../Chat/Chat';
 
 const Home: React.FunctionComponent = () => {
   const [isLoggined, setLoginned] = useState(0)
-  const socket = new WebSocket('ws://localhost:9000')
   const token = localStorage.getItem('token')
-
-  // Function to bind socket and listen to it's actions
-  const bindSocket = () => {
-    socket.onopen = () => {
-      socket.send(
-          JSON.stringify({action: 'register', jwt: token})
-      )
-    }
-    socket.addEventListener('message', (event: any) => {
-      const response = JSON.parse(event.data)
-      // console.dir(response)
-      if (!response.data) {
-        return
-      }
-      if (response.data.message === 'Successful connection') {
-        console.warn(`Socket: Successful connection`)
-      }
-      if (response.action === 'new_message') {
-        // this.fetchData()
-      }
-    })
-  }
 
   // Check if authenticated
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      fetch('http://' + 'localhost:9000' + '/api/checkAuth', {
+      fetch(config.server_url+ 'api/checkAuth', {
         method: 'POST',
-        body: JSON.stringify({token: localStorage.getItem('token')}),
+        body: JSON.stringify({token}),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -45,12 +23,10 @@ const Home: React.FunctionComponent = () => {
     } else {
       setLoginned(1)
     }
-  }, [])
+  }, [token])
 
   // Connect to socket
-  useEffect(() => {
-    bindSocket()
-  }, [])
+
 
   if (isLoggined === 0) {
     return <Preloader />
@@ -61,7 +37,7 @@ const Home: React.FunctionComponent = () => {
   }
 
 
-  return <>Hello World</>
+  return <Chat></Chat>
 }
 
 export default Home

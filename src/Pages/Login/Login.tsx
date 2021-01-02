@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
 import './Login.scss';
 import Preloader from "../../Components/Preloader/Preloader";
+import config from '../../config'
 
 const handleLogin = (credentials: {
   username?: string,
@@ -9,7 +10,7 @@ const handleLogin = (credentials: {
   key?:string
 }, stage: number, setStage: any) => {
   if (stage === 0) {
-  fetch('http://' + 'localhost:9000' + '/api/login', {
+  fetch(config.server_url + 'api/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
     headers: {
@@ -84,7 +85,7 @@ const Login: React.FunctionComponent = () => {
   }
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      fetch('http://' + 'localhost:9000' + '/api/checkAuth', {
+      fetch(config.server_url + 'api/checkAuth', {
         method: 'POST',
         body: JSON.stringify({token: localStorage.getItem('token')}),
         headers: {
