@@ -13,8 +13,8 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <App>
-        <Route exact path='/' component={Home} />
         <Route exact path='/login' component={Login}/>
+        <Route path={['/:id', '/']} exact component={Home} />
       </App>
     </BrowserRouter>
   </React.StrictMode>,

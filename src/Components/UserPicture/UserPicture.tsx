@@ -3,6 +3,7 @@ const UserPicture: React.FunctionComponent<{
   picture: string, 
   username: string,
 }> = (props) => {
+  if (!props.username) return <></>
   if (props.picture.includes('http')) {
     return <>
       <div className={'profile_picture'}>
