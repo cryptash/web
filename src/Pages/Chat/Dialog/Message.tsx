@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react"
 import { decryptMessage } from "../../../Utils/decrypt"
+import { formatDate, formatTime } from '../../../Utils/formatDate'
 
 const Message: React.FunctionComponent<{
   content: string
@@ -15,8 +15,20 @@ const Message: React.FunctionComponent<{
     console.log(error)
   }
   return <>
-    <div className={`chat_dialog__messages___bubble ${props.fromMe ? 'fromMe' : 'toMe'}`}>
-      {content}
+    <div className={`chat_dialog__messages-message ${props.fromMe ? 'fromMe' : 'toMe'}`}>
+      <div className={`chat_dialog__messages-message_top ${props.fromMe ? 'fromMe' : 'toMe'}`} >
+        <div className={`chat_dialog__messages-message_top-bubble ${props.fromMe ? 'fromMe' : 'toMe'}`}>
+          {content}
+        </div>
+        <div className={`chat_dialog__messages-message_top-context`}>
+        <span className="material-icons">
+          more_horiz
+        </span>
+        </div>
+      </div>
+      <div className={`chat_dialog__messages-message_bottom ${props.fromMe ? 'fromMe' : 'toMe'}`}>
+        {formatDate(props.date)}, {formatTime(props.date)}
+      </div>
     </div>
   </>
 }

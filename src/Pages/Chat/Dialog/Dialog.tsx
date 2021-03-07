@@ -5,7 +5,6 @@ import { ChatResponse } from "../../../Typings/ChatReponse";
 import Chat from "../Chat";
 import Message from "./Message";
 import './Dialog.scss'
-import { preProcessFile } from "typescript";
 
 const Dialog: React.FunctionComponent<{chat: ChatResponse, username: string, pub_key: string, socket: WebSocket, picture: string}> = (props) => {
   const Messages: Array<React.FunctionComponentElement<{
@@ -65,13 +64,14 @@ const Dialog: React.FunctionComponent<{chat: ChatResponse, username: string, pub
     Messages.push(<Message content={m.content} pub_key={props.chat.user.pub_key} key={nanoid(6)} fromMe={m.fromMe} date={m.date} />)
   })
   if (!props.chat) {
-    return <div>
-      
-    </div>
+    return <div></div>
   }
-  if (isLoading) return <Preloader />
+  if (isLoading) return <div className={'preloader'}><Preloader /></div>
   return <>
-    <div>{Messages}</div>
+    <div className={'chat_dialog'}>
+      <div className={'chat_dialog__messages'}>{Messages}</div>
+      <div className={'chat_dialog__input'}></div>
+    </div>
   </>
 }
 export default Dialog
