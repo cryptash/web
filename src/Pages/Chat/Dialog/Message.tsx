@@ -27,7 +27,7 @@ const Message: React.FunctionComponent<{
         </div>
       </div>
       <div className={`chat_dialog__messages-message_bottom ${props.fromMe ? 'fromMe' : 'toMe'}`}>
-        {formatDate(props.date)}, {formatTime(props.date)}
+         {formatTime(props.date)}
       </div>
     </div>
   </>

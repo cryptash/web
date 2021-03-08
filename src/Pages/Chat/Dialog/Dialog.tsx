@@ -5,6 +5,7 @@ import { ChatResponse } from "../../../Typings/ChatReponse";
 import Chat from "../Chat";
 import Message from "./Message";
 import './Dialog.scss'
+import MessageInput from "./MessageInput";
 
 const Dialog: React.FunctionComponent<{chat: ChatResponse, username: string, pub_key: string, socket: WebSocket, picture: string}> = (props) => {
   const Messages: Array<React.FunctionComponentElement<{
@@ -70,7 +71,7 @@ const Dialog: React.FunctionComponent<{chat: ChatResponse, username: string, pub
   return <>
     <div className={'chat_dialog'}>
       <div className={'chat_dialog__messages'}>{Messages}</div>
-      <div className={'chat_dialog__input'}></div>
+      <MessageInput socket={props.socket} pub_key={props.chat.user.pub_key} chat_id={props.chat.chat_id}/>
     </div>
   </>
 }

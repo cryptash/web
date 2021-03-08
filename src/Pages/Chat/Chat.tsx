@@ -38,12 +38,19 @@ const Chat = () => {
     }
     socket.addEventListener('message', (event: any) => {
       const response = JSON.parse(event.data)
-      // console.dir(response)
+      console.dir(response)
       if (!response.data) {
         return
       }
       if (response.data.message === 'Successful connection') {
         console.warn(`Socket: Successful connection`)
+      }
+      if (response.action === 'new_message') {
+        const chats = user.chats
+        chats.filter(e => e.chat_id === response.data.message.chat_id)[0].messages = [response.data.message]
+        chats.filter(e => e.chat_id === response.data.message.chat_id)[0].messageAt = response.data.message.date
+        setUser({chats})
+        console.log(response.data)
       }
     })
   }

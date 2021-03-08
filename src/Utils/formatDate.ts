@@ -46,8 +46,9 @@ const formatTime = (date: Date | string): string => {
       }
       return rl.format(-Math.round(diff / 1000 / 60), 'minutes')
     }
-    return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+    return `today, ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
   }
-  else return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+  else return `${formatDate(d)}, ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
 }
+
 export {formatDate, formatTime}

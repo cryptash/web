@@ -4,8 +4,11 @@
   height: 100vh;
   flex-direction: row;
   overflow-y: hidden;
+  &_dialog {
+    width: 80%;
+  }
   .preloader {
-    width: 98%;
+    width: 80%;
     display: flex;
     padding: 0;
     margin: 0;

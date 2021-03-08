@@ -12,6 +12,7 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
   if (isRedirect) {
     return <Redirect to={`/${chat.chat_id}`} />
   }
+  console.log(chat)
   if (chat.messages[0])
     console.log(decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key))
   return <>
