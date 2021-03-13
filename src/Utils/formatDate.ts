@@ -1,3 +1,5 @@
+import TimeAgo from "timeago-react";
+
 const isToday = (date: Date): boolean => {
   const today = new Date()
   return date.getDate() === today.getDate() &&
@@ -34,17 +36,12 @@ const formatDate = (date: Date | string): string => {
   }
 
 }
-const formatTime = (date: Date | string): string => {
+const formatTime = (date: Date | string): string | boolean => {
   const d = new Date(date)
-  const rl = new Intl.RelativeTimeFormat(['en'], {style: 'narrow'})
   const now = new Date()
-  const diff = now.getTime() - d.getTime()
   if (isToday(d)) {
     if (now.getHours() - d.getHours() < 2) {
-      if (Math.floor(diff / 1000 / 60) === 0) {
-        return rl.format(-Math.round(diff / 1000 ), 'seconds')
-      }
-      return rl.format(-Math.round(diff / 1000 / 60), 'minutes')
+      return false
     }
     return `today, ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
   }

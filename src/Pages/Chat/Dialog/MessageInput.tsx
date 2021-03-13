@@ -1,14 +1,14 @@
 import {useState} from 'react'
+import { useDialog } from '../../../Contexts/DialogContext'
 import { encryptMessage } from '../../../Utils/encrypt'
 
 const MessageInput: React.FunctionComponent<{
-  pub_key: string, 
   socket: WebSocket,
   chat_id: string
 }> = (props) => {
   const [message, setMessage] = useState('')
+  const {state} = useDialog()
   const handleInput = (e: any) => {
-    console.log(props)
     setMessage(e.target.value)
   }
   const handleSend = (e: any) => {
@@ -18,9 +18,8 @@ const MessageInput: React.FunctionComponent<{
       {
         text: message,
       },
-      props.pub_key
+      state.pub_key
     )
-  console.log(msg)
     props.socket.send(JSON.stringify(
       {
         action: 'send_message',

@@ -11,13 +11,13 @@ export const decryptMessage = (secretOrSharedKey: any, messageWithNonce: string,
       box.nonceLength,
       messageWithNonce.length
   )
-
   const decrypted = key ?
       box.open(message, nonce, public_key, private_key) :
       box.open.after(message, nonce, private_key)
 
   if (!decrypted) {
-    console.error("Couldn't decrypt: " + message)
+    console.error("Couldn't decrypt:")
+    console.error({messageWithNonce, key, secretOrSharedKey})
   }
   if (decrypted) {
     const base64DecryptedMessage = encodeUTF8(decrypted)

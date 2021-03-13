@@ -5,4 +5,5 @@ export interface UserState {
   pub_key: string
   picture: string
   chats: Array<ChatResponse>
+  addMessageToChat: Function
 }

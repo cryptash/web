@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Redirect} from 'react-router-dom';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
+import { UserProvider } from '../../Contexts/UserContext';
 import Chat from '../Chat/Chat';
 
 const Home: React.FunctionComponent = () => {
@@ -24,11 +25,7 @@ const Home: React.FunctionComponent = () => {
       setLoginned(1)
     }
   }, [token])
-
-  // Connect to socket
-
-
-  if (isLoggined === 0) {
+    if (isLoggined === 0) {
     return <Preloader />
   }
 
@@ -37,7 +34,10 @@ const Home: React.FunctionComponent = () => {
   }
 
 
-  return <Chat></Chat>
+  return (<UserProvider>
+    <Chat />
+  </UserProvider>)
+  
 }
 
 export default Home

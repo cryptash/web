@@ -1,58 +1,42 @@
 import Sidebar from "./Sidebar/Sidebar"
 import './Chat.scss'
 import config from '../../config'
-import React, { useEffect, useState } from "react"
-import {UserState} from '../../Typings/UserState'
-import { ChatResponse } from "../../Typings/ChatReponse"
+import React, {useEffect, useRef, useState } from "react"
 import Preloader from '../../Components/Preloader/Preloader'
 import { useParams } from "react-router-dom"
 import Dialog from "./Dialog/Dialog"
+import { useUser} from '../../Contexts/UserContext'
+import { DialogProvider } from "../../Contexts/DialogContext"
+
 const Chat = () => {
   const params: {id: string} = useParams()
-  const socket = new WebSocket(config.socket_url)
+  const socket = useRef(new WebSocket(config.socket_url))
   const token = localStorage.getItem('token')
-  const initialState: UserState = {
-    username: '',
-    user_id: '',
-    picture: '',
-    pub_key: '',
-    chats: [],
-  }
+  const {dispatch} = useUser()
   const [isLoading, setLoading] = useState(true)
-  const [user, setUserState] = useState(initialState)
-  const setUser = (newUser: {
-    username?: string
-    user_id?: string
-    picture?: string
-    chats?: Array<ChatResponse>
-  }) => {
-    //@ts-ignore
-    setUserState({...user, ...newUser})
-  }
+
   // Function to bind socket and listen to it's actions
+  const onSocketMessage = (event: any) => {
+    const response = JSON.parse(event.data)
+    console.dir(response)
+    if (!response.data) {
+      return
+    }
+    if (response.data.message === 'Successful connection') {
+      console.warn(`Socket: Successful connection`)
+    }
+    if (response.action === 'new_message') {
+      const message = response.data.message
+      dispatch({type: 'ADD_MESSAGE', payload: message})
+    }
+  }
   const bindSocket = () => {
-    socket.onopen = () => {
-      socket.send(
+    socket.current.onopen = () => {
+      socket.current.send(
           JSON.stringify({action: 'register', jwt: token})
       )
     }
-    socket.addEventListener('message', (event: any) => {
-      const response = JSON.parse(event.data)
-      console.dir(response)
-      if (!response.data) {
-        return
-      }
-      if (response.data.message === 'Successful connection') {
-        console.warn(`Socket: Successful connection`)
-      }
-      if (response.action === 'new_message') {
-        const chats = user.chats
-        chats.filter(e => e.chat_id === response.data.message.chat_id)[0].messages = [response.data.message]
-        chats.filter(e => e.chat_id === response.data.message.chat_id)[0].messageAt = response.data.message.date
-        setUser({chats})
-        console.log(response.data)
-      }
-    })
+    socket.current.addEventListener('message', onSocketMessage)
   }
   const fetchData = () => {
     fetch(config.server_url + 'api/users/getInfo', {
@@ -68,32 +52,34 @@ const Chat = () => {
           if (res.statusCode !== 200) {
             console.error(res)
           } else {
-            setUserState(res.response)
+            console.log(res.response)
+            const rsp = res.response
+            dispatch({type: 'CHANGE_USER', payload: {...rsp}})
             setLoading(false)
-            console.dir(user)
           }
         })
   }
   useEffect(() => {
     bindSocket()
     fetchData()
+    return () => socket.current.removeEventListener('message', onSocketMessage)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log(params.id)
   if (params.id === undefined) {
     console.log('No chat')
     return <div className={'chat'}>
-    <Sidebar user={user}/>
-  </div>
+    <Sidebar />
+    </div>
   }
   if (isLoading) {
     return <Preloader />
   }
-  return <>
-    <div className={'chat'}>
-      <Sidebar user={user}/>
-      <Dialog chat={user.chats.filter(e => e.chat_id === params.id)[0]} username={user.username} pub_key={user.pub_key} socket={socket} picture={user.picture}/>
+
+  return <div className={'chat'}>
+      <Sidebar/>
+      <DialogProvider>
+        <Dialog socket={socket.current}/> 
+      </DialogProvider>
     </div>
-  </>
 }
 export default Chat
