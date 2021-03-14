@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { decryptMessage } from "../../../Utils/decrypt"
-import { formatDate, formatTime } from '../../../Utils/formatDate'
+import { formatTime } from '../../../Utils/formatDate'
 import TimeAgo from 'timeago-react';
 const Message: React.FunctionComponent<{
   content: string

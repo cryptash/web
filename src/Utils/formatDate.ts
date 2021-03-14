@@ -1,5 +1,3 @@
-import TimeAgo from "timeago-react";
-
 const isToday = (date: Date): boolean => {
   const today = new Date()
   return date.getDate() === today.getDate() &&
@@ -29,7 +27,7 @@ const formatDate = (date: Date | string): string => {
     return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
   }
   if (isYesterday(d)) {
-    return `${rl.format(-1, 'day')} ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` 
+    return `yesterday` 
   }
   else {
     return d.toLocaleDateString([], {day: '2-digit', month: 'numeric', year: '2-digit'})

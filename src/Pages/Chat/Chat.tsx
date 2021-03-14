@@ -62,6 +62,7 @@ const Chat = () => {
   useEffect(() => {
     bindSocket()
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => socket.current.removeEventListener('message', onSocketMessage)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

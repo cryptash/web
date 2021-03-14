@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import { useDialog } from '../../../Contexts/DialogContext'
 import { encryptMessage } from '../../../Utils/encrypt'
 
@@ -11,6 +11,7 @@ const MessageInput: React.FunctionComponent<{
   const handleInput = (e: any) => {
     setMessage(e.target.value)
   }
+  const inputRef = useRef<HTMLInputElement>(null)
   const handleSend = (e: any) => {
     e.preventDefault()
     const msg = encryptMessage(
@@ -28,12 +29,15 @@ const MessageInput: React.FunctionComponent<{
         token: localStorage.getItem('token'),
       }
   ))
+    if (inputRef.current)
+      inputRef.current.value = ''
+      setMessage('')
   }
   return <>
     <div className={'chat_dialog__input'}>
         <div className={'chat_dialog__input-wrap'}>
             <form action="" onSubmit={(e) => handleSend(e)}>
-                <input type={'text'} onInput={(e) => handleInput(e)}/>    
+                <input type={'text'} onInput={(e) => handleInput(e)} ref={inputRef}/>    
                 <button type={'submit'} className={'material-icons'}>send</button>
             </form>    
         </div>

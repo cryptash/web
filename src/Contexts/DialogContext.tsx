@@ -1,10 +1,7 @@
-import { nanoid } from 'nanoid'
 import React from 'react'
-import MessageComp from '../Pages/Chat/Dialog/Message'
 import { Message } from '../Typings/Message'
-import { UserState } from '../Typings/UserState'
 
-type Action = {type: 'ADD_MESSAGE', payload: any}| {type: 'CHANGE_KEY', payload: any} | {type: 'REMOVE_MESSAGE', payload: any} | {type: 'EDIT_MESSAGE', payload: any} | {type: 'CHANGE_DIALOG', payload?: any}
+type Action = {type: 'ADD_MESSAGE', payload: any} | {type: 'ADD_MORE_MESSAGES', payload: any} | {type: 'CHANGE_KEY', payload: any} | {type: 'REMOVE_MESSAGE', payload: any} | {type: 'EDIT_MESSAGE', payload: any} | {type: 'CHANGE_DIALOG', payload?: any}
 type Dispatch = (action: Action) => void
 type DialogState = {
     messages: Message[],
@@ -22,7 +19,11 @@ const dialogReducer = (state: DialogState, action: Action) => {
     switch (action.type) {
         case 'ADD_MESSAGE': {
             state.messages.push(...data)
-            return {...state,}
+            return {...state}
+        }
+        case 'ADD_MORE_MESSAGES': {
+            state.messages = [...data, ...state.messages]
+            return {...state}
         }
         case 'CHANGE_DIALOG': {
             return {
@@ -52,8 +53,6 @@ const initialState: DialogState = {
 }
 const DialogProvider = ({children}: {children: React.ReactNode}) => {
     const [state, dispatch] = React.useReducer(dialogReducer, initialState)
-    // NOTE: you *might* need to memoize this value
-    // Learn more in http://kcd.im/optimize-context
     const value = {state, dispatch, }
     return <DialogContext.Provider value={value}>{children}</DialogContext.Provider>
 }

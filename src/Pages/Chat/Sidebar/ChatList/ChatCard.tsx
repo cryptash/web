@@ -4,7 +4,7 @@ import TimeAgo from "timeago-react";
 import UserPicture from "../../../../Components/UserPicture/UserPicture";
 import { ChatResponse } from "../../../../Typings/ChatReponse";
 import { decryptMessage } from "../../../../Utils/decrypt";
-import { formatDate, formatTime } from "../../../../Utils/formatDate";
+import { formatTime } from "../../../../Utils/formatDate";
 
 const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
   const {chat} = props
