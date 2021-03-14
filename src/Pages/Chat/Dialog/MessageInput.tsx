@@ -37,7 +37,7 @@ const MessageInput: React.FunctionComponent<{
     <div className={'chat_dialog__input'}>
         <div className={'chat_dialog__input-wrap'}>
             <form action="" onSubmit={(e) => handleSend(e)}>
-                <input type={'text'} onInput={(e) => handleInput(e)} ref={inputRef}/>    
+                <input type={'text'} placeholder={'Write a message...'} onInput={(e) => handleInput(e)} ref={inputRef}/>    
                 <button type={'submit'} className={'material-icons'}>send</button>
             </form>    
         </div>
