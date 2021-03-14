@@ -22,7 +22,6 @@ const handleLogin = (credentials: {
         if (res.statusCode !== 200) {
           alert(res.message)
         } else {
-          console.log(res)
           localStorage.setItem('token', res.token)
           setStage(1)
         }
@@ -71,7 +70,6 @@ const Login: React.FunctionComponent = () => {
                  autoComplete={'off'}
                  placeholder={'Private key'}
                  onChange={(e:any) => {
-                   console.log(e.target.value)
                    setCredentials({
                      ...credentials,
                      key: e.target.value,

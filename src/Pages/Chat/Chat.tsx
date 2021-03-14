@@ -52,7 +52,6 @@ const Chat = () => {
           if (res.statusCode !== 200) {
             console.error(res)
           } else {
-            console.log(res.response)
             const rsp = res.response
             dispatch({type: 'CHANGE_USER', payload: {...rsp}})
             setLoading(false)

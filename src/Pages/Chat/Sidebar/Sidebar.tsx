@@ -6,7 +6,6 @@ import { useUser } from "../../../Contexts/UserContext"
 const Sidebar = (props: {
 }) => {
   const {state} = useUser()
-  console.log(state)
   return <>
     <div className={'chat_sidebar'}>
       <SidebarHeader user={{username: state.username, picture: state.picture}} />
