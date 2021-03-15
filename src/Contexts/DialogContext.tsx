@@ -1,7 +1,13 @@
 import React from 'react'
 import { Message } from '../Typings/Message'
 
-type Action = {type: 'ADD_MESSAGE', payload: any} | {type: 'ADD_MORE_MESSAGES', payload: any} | {type: 'CHANGE_KEY', payload: any} | {type: 'REMOVE_MESSAGE', payload: any} | {type: 'EDIT_MESSAGE', payload: any} | {type: 'CHANGE_DIALOG', payload?: any}
+type Action = {type: 'ADD_MESSAGE', payload: any} | 
+    {type: 'ADD_MORE_MESSAGES', payload: any} | 
+    {type: 'CHANGE_KEY', payload: any} | 
+    {type: 'REMOVE_MESSAGE', payload: any} | 
+    {type: 'EDIT_MESSAGE', payload: any} | 
+    {type: 'CHANGE_DIALOG', payload?: any} |
+    {type: 'SET_MESSAGE_READ_STATUS', payload: {id: string}}
 type Dispatch = (action: Action) => void
 type DialogState = {
     messages: Message[],
@@ -32,11 +38,16 @@ const dialogReducer = (state: DialogState, action: Action) => {
                 picture: '',
                 pub_key: '',
                 messages: [],
-                messageComponents: []
             }
         }
         case 'CHANGE_KEY': {
             state.pub_key = action.payload
+            return state
+        }
+        case 'SET_MESSAGE_READ_STATUS': {
+            const msg = state.messages.filter(x => x.message_id === data.id)[0]
+            msg.read = true
+            console.log(state)
             return state
         }
         default: {

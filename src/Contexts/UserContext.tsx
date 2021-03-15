@@ -13,14 +13,12 @@ const userReducer = (state: UserState, action: Action) => {
     switch (action.type) {
         case 'ADD_MESSAGE': {
             const chats = [...state.chats]
-            console.log(chats)
             chats.filter((e: any) => e.chat_id === data.chat_id)[0].messages = [data]
             chats.filter((e: any) => e.chat_id === data.chat_id)[0].messageAt = data.date
             chats.sort((a, b): number => new Date(b.messageAt).getTime() - new Date(a.messageAt).getTime()) 
           return {...state, chats}
         }
         case 'CHANGE_USER': {
-            console.log(action)
             return {...data}
         }
         default: {
