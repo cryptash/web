@@ -40,6 +40,15 @@
     }
     &___bottom {
       margin-left: 10px;
+      height: 18px;
+      &____content {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        max-height: 18px;
+        text-overflow: ellipsis;
+      }
     }
     .profile_picture {
       margin: auto 0;

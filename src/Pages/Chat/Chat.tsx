@@ -41,6 +41,7 @@ const Chat = () => {
   const fetchData = () => {
     fetch(config.server_url + 'api/users/getInfo', {
       method: 'POST',
+      mode: 'cors',
       body: JSON.stringify({}),
       headers: {
         'Authorization': token ? token : '',

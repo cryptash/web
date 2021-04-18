@@ -6,6 +6,8 @@ import './Dialog.scss'
 import MessageInput from "./MessageInput";
 import { useParams } from "react-router";
 import { useDialog } from "../../../Contexts/DialogContext";
+import DialogHeader from "./DialogHeader";
+import { useUser } from "../../../Contexts/UserContext";
 
 const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
   const [isLoading, setLoading] = useState(true)
@@ -14,6 +16,7 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
   const prevScrollHeight = useRef(0)
   const [isRequested, setRequested] = useState(false)
   const dialog = useDialog()
+  const user = useUser()
   const [msg, setMsg] = useState<Array<JSX.Element>>([])
   const messagesDiv = useRef<HTMLDivElement>(null)
   const callbacks = useRef<Array<Function>>([])
@@ -121,6 +124,7 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
   if (isLoading) return <div className={'preloader'}><Preloader /></div>
   return <>
     <div className={'chat_dialog'}>
+      <DialogHeader socket={props.socket} />
       <div className={'chat_dialog__messages'} onScroll={(e) => scrollCallback(e)} ref={messagesDiv}>{msg}</div>
       <MessageInput socket={props.socket} chat_id={params.id}/>
     </div>

@@ -24,7 +24,7 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
           </span>
         </div>
         <div className={'chat_list__card___bottom'}>
-          <span className={'chat_list__card___top____content'}>{
+          <span className={'chat_list__card___bottom____content'}>{
             chat.messages[0] ? decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text : ''
           }</span>
         </div>

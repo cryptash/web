@@ -7,6 +7,12 @@ type Action = {type: 'ADD_MESSAGE', payload: any} |
     {type: 'REMOVE_MESSAGE', payload: any} | 
     {type: 'EDIT_MESSAGE', payload: any} | 
     {type: 'CHANGE_DIALOG', payload?: any} |
+    {type: 'SET_DIALOG_DATA', payload?: {
+        username?: string,
+        pub_key?: string,
+        user_id?: string,
+        picture?: string
+    }} |
     {type: 'SET_MESSAGE_READ_STATUS', payload: {id: string}}
 type Dispatch = (action: Action) => void
 type DialogState = {
@@ -49,6 +55,9 @@ const dialogReducer = (state: DialogState, action: Action) => {
             msg.read = true
             console.log(state)
             return state
+        }
+        case 'SET_DIALOG_DATA': {
+            return {...state, ...data}
         }
         default: {
           throw new Error(`Unhandled action type: ${action.type}`)
