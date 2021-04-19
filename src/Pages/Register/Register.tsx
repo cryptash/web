@@ -56,7 +56,7 @@ const Register: React.FunctionComponent = () => {
     if (stage === 0) {
         fetch(config.server_url + 'api/register', {
         method: 'POST',
-        body: JSON.stringify({...credentials, key: key.public_key}),
+        body: JSON.stringify({...credentials, pub_key: key.public_key}),
         headers: {
             'Content-Type': 'application/json',
         },

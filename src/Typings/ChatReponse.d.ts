@@ -1,9 +1,9 @@
 export interface ChatResponse {
-  chat_id: string,
-  messageAt: Date,
+  chat_id?: string,
+  messageAt?: Date,
   user: {
     user_id: string
-    pub_key: string
+    pub_key?: string
     picture: string
     username: string
   },

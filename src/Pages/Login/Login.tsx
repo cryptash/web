@@ -3,6 +3,7 @@ import {Link, Redirect} from "react-router-dom";
 import './Login.scss';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
+import { nanoid } from "nanoid";
 
 const handleLogin = (credentials: {
   username?: string,
@@ -69,6 +70,7 @@ const Login: React.FunctionComponent = () => {
                  className={'login_main__form___privatekey'}
                  autoComplete={'off'}
                  placeholder={'Private key'}
+                 key={localStorage.getItem('token')}
                  onChange={(e:any) => {
                    setCredentials({
                      ...credentials,

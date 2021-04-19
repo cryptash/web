@@ -15,7 +15,7 @@ const userReducer = (state: UserState, action: Action) => {
             const chats = [...state.chats]
             chats.filter((e: any) => e.chat_id === data.chat_id)[0].messages = [data]
             chats.filter((e: any) => e.chat_id === data.chat_id)[0].messageAt = data.date
-            chats.sort((a, b): number => new Date(b.messageAt).getTime() - new Date(a.messageAt).getTime()) 
+            chats.sort((a, b): number => new Date(b.messageAt ? b.messageAt : '').getTime() - new Date(a.messageAt ? a.messageAt : '').getTime()) 
           return {...state, chats}
         }
         case 'CHANGE_USER': {
