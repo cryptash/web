@@ -59,6 +59,9 @@ const Message: React.FunctionComponent<{
       })
     }
   }, [isRead])
+  useEffect(() => {
+    scrollCallback()
+  }, [])
   return <>
     <div className={`chat_dialog__messages-message ${props.fromMe ? 'fromMe' : 'toMe'}`} ref={messageRef}>
       <div className={`chat_dialog__messages-message_top ${props.fromMe ? 'fromMe' : 'toMe'}`} >
