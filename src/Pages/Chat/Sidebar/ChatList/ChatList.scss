@@ -55,3 +55,19 @@
     }
   }
 }
+
+@media (max-width: 860px) {
+  .chat_sidebar.closed {
+    .chat_list {
+      .right {
+        display: none;
+      }
+      .profile_picture {
+        margin: auto;
+      }
+      .chat_list__card {
+        padding: 0;
+      }
+    }
+  }
+}

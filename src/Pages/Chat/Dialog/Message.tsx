@@ -66,7 +66,7 @@ const Message: React.FunctionComponent<{
     <div className={`chat_dialog__messages-message ${props.fromMe ? 'fromMe' : 'toMe'}`} ref={messageRef}>
       <div className={`chat_dialog__messages-message_top ${props.fromMe ? 'fromMe' : 'toMe'}`} >
         <div className={`chat_dialog__messages-message_top-bubble ${props.fromMe ? 'fromMe' : 'toMe'}`}>
-          {content}
+          <span>{content}</span>
         </div>
         <div className={`chat_dialog__messages-message_top-context`}>
           <span className="material-icons">

@@ -8,7 +8,6 @@
     width: auto;
     max-width: 80%;
     margin-bottom: 10px;
-    min-width: none;
     &.fromMe {
       align-self: flex-end;
       margin-left: auto;
@@ -38,6 +37,9 @@
         color: white;
         box-shadow: 0px 5px 5px rgba(54, 116, 255, 0.196733);
         border-radius: 12px 12px 12px 0px; 
+        span::selection {
+          background: #00a8ff;
+        }
       }
     } 
     &_top-context {
@@ -100,5 +102,13 @@
         cursor: pointer;
       }
     }
+  }
+}
+
+
+@media (max-width: 860px) {
+  .chat_dialog {
+    width: 85%;
+    min-width: calc(100% - 60px);
   }
 }

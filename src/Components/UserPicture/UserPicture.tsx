@@ -7,7 +7,7 @@ const UserPicture: React.FunctionComponent<{
   if (props.picture.includes('http')) {
     return <>
       <div className={'profile_picture'}>
-        <img src={props.picture} alt={`${props.username}'s profile pic`} className={'profile_picture__img'}></img>
+        <img src={props.picture} alt={`${props.username}'s profile pic`} className={'profile_picture__img'} ></img>
       </div>
     </>
   }

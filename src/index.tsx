@@ -9,16 +9,19 @@ import {BrowserRouter, Route, Link} from 'react-router-dom';
 import Login from './Pages/Login/Login';
 import Home from './Pages/Home/Home';
 import Register from './Pages/Register/Register';
+import { ScreenProvider } from './Contexts/ScreenContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App>
-        <Route exact path='/login' component={Login}/>
-        <Route exact path='/register' component={Register}/>
-        <Route path={['/:id', '/']} exact component={Home} />
-      </App>
-    </BrowserRouter>
+    <ScreenProvider>
+      <BrowserRouter>
+        <App>
+          <Route exact path='/login' component={Login}/>
+          <Route exact path='/register' component={Register}/>
+          <Route path={['/:id', '/']} exact component={Home} />
+        </App>
+      </BrowserRouter>
+    </ScreenProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

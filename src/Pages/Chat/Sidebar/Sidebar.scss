@@ -1,7 +1,32 @@
 .chat_sidebar {
+  transition: all 0.6s ease;
   height: 100vh;
   border-right: 2px solid #F7F7F7;
   width: 25%;
   min-width: 320px;
   margin-left: 0px;
+}
+
+@media (max-width: 860px) {
+  .chat_sidebar.closed {
+    width: 5%;
+    min-width: 50px;
+    .profile_picture {
+      margin: auto;
+    }
+    &__header {
+      color: white;
+      &___username {
+        display: none;
+        opacity: 0;
+      }
+    }
+  }
+  .chat_sidebar.closed .chat_sidebar__header___username {
+    display: none;
+    opacity: 0;
+  }
+  .chat_sidebar.opened {
+    width: 70%;
+  }
 }
