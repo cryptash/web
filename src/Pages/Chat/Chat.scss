@@ -1,7 +1,7 @@
 .chat {
   width: 100%;
   display: flex;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   flex-direction: row;
   overflow-y: hidden;
   &_dialog {
@@ -12,7 +12,7 @@
     display: flex;
     padding: 0;
     margin: 0;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
