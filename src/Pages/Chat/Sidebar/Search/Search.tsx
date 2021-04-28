@@ -2,9 +2,14 @@ import config from '../../../../config'
 import { useSearch } from '../../../../Contexts/SearchReducer'
 import { useUser } from '../../../../Contexts/UserContext'
 import './Search.scss'
+import {useRef} from "react";
 
-const SidebarSearch = () => {
+const SidebarSearch = (props: {
+  isOpened: boolean,
+  setOpened: (s: boolean) => void
+}) => {
   const search = useSearch()
+  const input = useRef<HTMLInputElement>(null)
   const handleSearch = (e: {target: {value: string}}) => {
     search.dispatch({type: 'CHANGE_FILTER', payload: {
       type: 'users',
@@ -48,11 +53,18 @@ const SidebarSearch = () => {
   }
   return (<>
     <div className={'chat_sidebar__search'}>
-      <div className={'chat_sidebar__search___bar'}>
+      <div className={'chat_sidebar__search___bar'} onClick={(e) => {
+        if (!props.isOpened) {
+          props.setOpened(true)
+          if (input.current !== null) {
+            setTimeout(() => {if (input.current !== null) input.current.focus()}, 100)
+          }
+        }
+      }}>
         <span className="material-icons outlined">
           search
         </span>
-        <input type={'text'} className={'chat_sidebar__search___bar-input'} placeholder={'Search users'} onChange={(e) => handleSearch(e)}/>
+        <input type={'text'} className={'chat_sidebar__search___bar-input'} placeholder={'Search users'} ref={input} onChange={(e) => handleSearch(e)}/>
       </div>
     </div>
   </>)

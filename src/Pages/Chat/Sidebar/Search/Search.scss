@@ -42,5 +42,7 @@
 }
 
 .chat_sidebar.closed .chat_sidebar__search {
-    opacity: 0;
+    input {
+        display: none;
+    }
 }
