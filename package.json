@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@logux/client": "^0.10.0",
+    "@logux/core": "^0.7.0",
+    "@logux/redux": "^0.8.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -17,6 +20,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "redux": "^4.1.0",
     "timeago-react": "^3.0.2",
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",

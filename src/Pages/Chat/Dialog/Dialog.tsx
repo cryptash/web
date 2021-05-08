@@ -11,7 +11,8 @@ import { useUser } from "../../../Contexts/UserContext";
 
 const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
   const [isLoading, setLoading] = useState(true)
-  const params: {id: string} = useParams()
+  let params: {id: string} = useParams()
+  // const [id, setId] = useState('')
   const page = useRef(0)
   const prevScrollHeight = useRef(0)
   const [isRequested, setRequested] = useState(false)
@@ -24,6 +25,11 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
     callbacks.current.push(callback)
     return () => callbacks.current.filter(x => x !== callback)
   }
+  // useEffect(() => {
+  //   console.log(params.id)
+  //   setId(params.id)
+  // }, [params.id]);
+
   const scrollCallback = (e: any) => {
     callbacks.current.forEach(callback => {
       callback(e)
@@ -44,7 +50,7 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
       }
     }
   }
-  const callback = useCallback((ev: MessageEvent<any>) => {
+  const callback = useCallback((ev: MessageEvent<any>, id) => {
     const response = JSON.parse(ev.data)
     if (response.action === 'get_messages') {
       if (page.current === 0) {
@@ -62,8 +68,8 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
       setLoading(false)
     }
     if (response.action === 'new_message') {
-      if (response.data.message.chat_id === params.id){
-        console.log(response.data.message.chat_id, params.id)
+      console.log(response.data.message.chat_id, id)
+      if (response.data.message.chat_id === id) {
         dialog.dispatch({type: 'ADD_MESSAGE', payload: [{
           content: response.data.message.content,
           pub_key: dialog.state.pub_key,
@@ -75,7 +81,7 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
       }
     }
     if (response.action === 'message_read_by_user') {
-      if (response.data.chat_id === params.id)
+      if (response.data.chat_id === id)
         dialog.dispatch({type: 'SET_MESSAGE_READ_STATUS', payload: {
           id: response.data.message_id
         }})
@@ -101,7 +107,8 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
       messagesDiv.current.scrollTo(0,messagesDiv.current ? messagesDiv.current.scrollHeight - prevScrollHeight.current : 0);
   }, [msg])
   useEffect(() => {
-    props.socket.addEventListener('message', callback)
+    const _ = (ev: MessageEvent) => callback(ev, params.id)
+    props.socket.addEventListener('message', _)
     dialog.dispatch({type: 'CHANGE_DIALOG'})
     page.current = 0
     setLoading(true)
@@ -115,7 +122,7 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
     )
     return () => {
       // props.socket.removeEventListener('open', onOpenCallback)
-      props.socket.removeEventListener('message', callback)
+      props.socket.removeEventListener('message', _)
     }
   }, [callback, params.id, props.socket])
   if (!params.id) {

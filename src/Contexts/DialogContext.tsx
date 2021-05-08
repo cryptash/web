@@ -30,6 +30,7 @@ const dialogReducer = (state: DialogState, action: Action) => {
     console.log(action)
     switch (action.type) {
         case 'ADD_MESSAGE': {
+            console.log('NEW MESSAGE')
             state.messages.push(...data)
             return {...state}
         }

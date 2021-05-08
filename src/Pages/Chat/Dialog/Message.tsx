@@ -30,7 +30,7 @@ const Message: React.FunctionComponent<{
     const rect = messageRef.current?.getBoundingClientRect()
     if (rect) {
       if (rect.top > 0) {
-        console.log(props.id)
+        console.log('message read by me' + props.id)
           props.socket.send(JSON.stringify({
             action: 'mark_as_read',
             chatId: params.id,
@@ -38,7 +38,6 @@ const Message: React.FunctionComponent<{
             token: localStorage.getItem('token')
           }))
           isActionSent.current = true
-          console.log(content)
           setRead(true)
       }
     }

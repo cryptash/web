@@ -1,6 +1,5 @@
 import config from '../../../../config'
 import { useSearch } from '../../../../Contexts/SearchReducer'
-import { useUser } from '../../../../Contexts/UserContext'
 import './Search.scss'
 import {useRef} from "react";
 
@@ -55,9 +54,8 @@ const SidebarSearch = (props: {
     <div className={'chat_sidebar__search'}>
       <div className={'chat_sidebar__search___bar'} onClick={(e) => {
         if (!props.isOpened) {
-          props.setOpened(true)
           if (input.current !== null) {
-            setTimeout(() => {if (input.current !== null) input.current.focus()}, 100)
+            setTimeout(() => {props.setOpened(true); if (input.current !== null) input.current.focus()}, 100)
           }
         }
       }}>
