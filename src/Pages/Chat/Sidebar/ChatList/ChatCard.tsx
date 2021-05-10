@@ -1,15 +1,29 @@
 import { useState } from "react";
-import { Redirect } from "react-router-dom";
 import TimeAgo from "timeago-react";
 import UserPicture from "../../../../Components/UserPicture/UserPicture";
 import config from "../../../../config";
 import { ChatResponse } from "../../../../Typings/ChatReponse";
 import { decryptMessage } from "../../../../Utils/decrypt";
 import { formatTime } from "../../../../Utils/formatDate";
+import { useHistory } from 'react-router-dom';
 
 const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
   const {chat} = props
   const [isRedirect, SetRedirect] = useState(false)
+  let history = useHistory();
+  console.log(chat.user.username, chat.messages[0] ? chat.messages[0].date : '')
+  const generateText = () => {
+    if (chat.messages[0]) {
+        try {
+          return decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text
+        }
+        catch (e) {
+          console.info(e.text)
+          return ''
+        }
+    }
+    return ''
+  }
   const handleClick = (e: any) => {
     if (!chat.chat_id) {
       const headers = new Headers({
@@ -34,11 +48,8 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
         })
     }
     else {
-      SetRedirect(true)
+      history.push(`/${chat.chat_id}`)
     }
-  }
-  if (isRedirect) {
-    return <Redirect to={`/${chat.chat_id}`} />
   }
   return <>
     <div className={'chat_list__card'} onClick={(e) => handleClick(e)}>
@@ -52,7 +63,7 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
         </div>
         <div className={'chat_list__card___bottom'}>
           <span className={'chat_list__card___bottom____content'}>{
-            chat.messages[0] ? decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text : ''
+            generateText()
           }</span>
         </div>
       </div>

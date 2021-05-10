@@ -4,36 +4,24 @@ import './Login.scss';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
 import { nanoid } from "nanoid";
-
-const handleLogin = (credentials: {
-  username?: string,
-  password?: string,
-  key?:string
-}, stage: number, setStage: any) => {
-  if (stage === 0) {
-  fetch(config.server_url + 'api/login', {
-    method: 'POST',
-    body: JSON.stringify(credentials),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+import {Client} from "@logux/client";
+function login (username: string, password: string, setStage: (n: number) => void, stage: number) {
+  let client = new Client({
+    subprotocol: '1.0.0',
+    server: config.socket_url,
+    userId: 'anonymous'
   })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.statusCode !== 200) {
-          alert(res.message)
-        } else {
-          localStorage.setItem('token', res.token)
-          setStage(1)
-        }
-      })
-  }
-  else {
-    if (credentials.key != null) {
-      localStorage.setItem('key', credentials.key)
-      if (localStorage.getItem('key')) setStage(2)
+  client.on('add', (action: any) => {
+    if (action.type === 'login/done') {
+      localStorage.setItem('user_id', action.user_id)
+      localStorage.setItem('token', action.token)
+      setStage(1)
+    } else if (action.type === 'logux/undo') {
+      alert(action.reason)
     }
-  }
+  })
+  client.start()
+  client.log.add({ type: 'login', username, password }, { sync: true })
 }
 
 const Login: React.FunctionComponent = () => {
@@ -43,7 +31,6 @@ const Login: React.FunctionComponent = () => {
     key: ''
   })
   const [stage, setStage] = useState(0)
-  const [isLoading, setLoading] = useState(true)
   const handleChange = (e: any) => {
     setCredentials({
       ...credentials,
@@ -71,41 +58,17 @@ const Login: React.FunctionComponent = () => {
                  autoComplete={'off'}
                  placeholder={'Private key'}
                  key={localStorage.getItem('token')}
-                 onChange={(e:any) => {
-                   setCredentials({
-                     ...credentials,
-                     key: e.target.value,
-                  })}
-                 }
+                 onChange={(e) => localStorage.setItem('key', e.target.value)}
           />
-          <button type={'submit'} className={'login_main__form___submit'}>Login</button>
+          <button type={'submit'} className={'login_main__form___submit'} onSubmit={(e) => {
+            if (localStorage.getItem('key')) {
+              setStage(2)
+            }
+          }}>Login</button>
         </>
     )
     else return <Redirect to={'/'} />
   }
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      fetch(config.server_url + 'api/checkAuth', {
-        method: 'POST',
-        body: JSON.stringify({token: localStorage.getItem('token')}),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-          .then((res) => res.json())
-          .then((res) => {
-            if (res.statusCode === 200) {
-              setLoading(false)
-              setStage(2)
-            }
-
-          })
-    }
-    else {
-      setLoading(false)
-    }
-  }, [])
-  if (isLoading) return <Preloader />
   return <>
     <div className="login_main">
       <div className={'login_main__header'}>
@@ -115,7 +78,7 @@ const Login: React.FunctionComponent = () => {
       <div className={'login_main__block'}>
         <form className={'login_main__form'} onSubmit={(e) =>{
           e.preventDefault()
-          handleLogin(credentials, stage, setStage)
+          login(credentials.username, credentials.password, (n: number) => setStage(n), stage)
         }}>
           {stage ? secondStage() : firstStage()}
         </form>

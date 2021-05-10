@@ -8,16 +8,22 @@ import { useParams } from "react-router";
 import { useDialog } from "../../../Contexts/DialogContext";
 import DialogHeader from "./DialogHeader";
 import { useUser } from "../../../Contexts/UserContext";
+import {useDispatch, useSubscription} from "@logux/redux";
+import {Props} from "../../Home/Home";
+import {useSelector} from "react-redux";
+import {getMessages, RootState} from "../../../Reducers";
+import store from "../../../Logux/store";
 
-const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
-  const [isLoading, setLoading] = useState(true)
+const Dialog: React.FunctionComponent<Props> = (props) => {
   let params: {id: string} = useParams()
   // const [id, setId] = useState('')
+  const dispatch = useDispatch()
   const page = useRef(0)
   const prevScrollHeight = useRef(0)
   const [isRequested, setRequested] = useState(false)
   const dialog = useDialog()
-  const user = useUser()
+  const isSubscribing = useSubscription([`chat/${params.id}`]);
+  const chat = useSelector((state: RootState) => state.chatReducer)
   const [msg, setMsg] = useState<Array<JSX.Element>>([])
   const messagesDiv = useRef<HTMLDivElement>(null)
   const callbacks = useRef<Array<Function>>([])
@@ -25,10 +31,13 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
     callbacks.current.push(callback)
     return () => callbacks.current.filter(x => x !== callback)
   }
-  // useEffect(() => {
-  //   console.log(params.id)
-  //   setId(params.id)
-  // }, [params.id]);
+  useEffect(() => {
+    props.setChatId(params.id)
+  }, []);
+
+  useEffect(() => {
+    props.changeChat(params.id)
+  }, [params.id]);
 
   const scrollCallback = (e: any) => {
     callbacks.current.forEach(callback => {
@@ -39,14 +48,15 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
         page.current = page.current + 1
         prevScrollHeight.current = messagesDiv.current? messagesDiv.current.scrollHeight : 0
         setRequested(true)
-        props.socket.send(
-          JSON.stringify({
-            action: 'get_messages',
-            chat_id: params.id,
-            pg: page.current,
-            jwt: localStorage.getItem('token'),
-          })
-        )
+        dispatch.sync(getMessages({pg: page.current, chat_id: params.id})).then(() => setRequested(false))
+        // props.socket.send(
+        //   JSON.stringify({
+        //     action: 'get_messages',
+        //     chat_id: params.id,
+        //     pg: page.current,
+        //     jwt: localStorage.getItem('token'),
+        //   })
+        // )
       }
     }
   }
@@ -65,7 +75,6 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
           setRequested(false)
         } 
       }
-      setLoading(false)
     }
     if (response.action === 'new_message') {
       console.log(response.data.message.chat_id, id)
@@ -88,52 +97,48 @@ const Dialog: React.FunctionComponent<{socket: WebSocket}> = (props) => {
     }
   }, [dialog.state.user_id])
   useEffect(() => {
+    store.subscribe(() => {
+      let c = store.getState().chatReducer
+      const msgComp: Array<JSX.Element> = []
+      c.messages.forEach((m: {
+        content: string,
+        fromMe: boolean,
+        date: Date,
+        read: boolean,
+        message_id: string
+      }) => {
+        return msgComp.push(<Message socket={props.socket} id={m.message_id} subscribeToScroll={(c: Function) => subcribeToScroll(c)} isRead={m.read} content={m.content} pub_key={props.chat.pub_key} key={nanoid(6)} fromMe={m.fromMe} date={m.date} />)
+      });
+      setMsg(msgComp)
+    })
     const msgComp: Array<JSX.Element> = []
-    dialog.state.messages.forEach((m: {
+    chat.messages.forEach((m: {
       content: string,
       fromMe: boolean,
       date: Date,
       read: boolean,
       message_id: string
   }) => {
-      return msgComp.push(<Message socket={props.socket} id={m.message_id} subscribeToScroll={(c: Function) => subcribeToScroll(c)} isRead={m.read} content={m.content} pub_key={dialog.state.pub_key} key={nanoid(6)} fromMe={m.fromMe} date={m.date} />)
+      return msgComp.push(<Message socket={props.socket} id={m.message_id} subscribeToScroll={(c: Function) => subcribeToScroll(c)} isRead={m.read} content={m.content} pub_key={props.chat.pub_key} key={nanoid(6)} fromMe={m.fromMe} date={m.date} />)
   });
     setMsg(msgComp)
-  },[dialog.state])
+  },[chat])
   useEffect(() => {
-    if (messagesDiv.current && (messagesDiv.current.scrollTop > 1000 || page.current === 0))
-      messagesDiv.current.scrollTo(0,messagesDiv.current ? messagesDiv.current.scrollHeight : 0);
+    if (messagesDiv.current && (messagesDiv.current.scrollTop > 1000 || page.current === 0)){
+      messagesDiv.current.scrollTo(0,messagesDiv.current ? messagesDiv.current.scrollHeight : 0)
+    }
     else if (messagesDiv.current)
       messagesDiv.current.scrollTo(0,messagesDiv.current ? messagesDiv.current.scrollHeight - prevScrollHeight.current : 0);
-  }, [msg])
-  useEffect(() => {
-    const _ = (ev: MessageEvent) => callback(ev, params.id)
-    props.socket.addEventListener('message', _)
-    dialog.dispatch({type: 'CHANGE_DIALOG'})
-    page.current = 0
-    setLoading(true)
-    props.socket.send(
-      JSON.stringify({
-        action: 'get_messages',
-        chat_id: params.id,
-        pg: 0,
-        jwt: localStorage.getItem('token'),
-      })
-    )
-    return () => {
-      // props.socket.removeEventListener('open', onOpenCallback)
-      props.socket.removeEventListener('message', _)
-    }
-  }, [callback, params.id, props.socket])
+  }, [msg, isSubscribing])
   if (!params.id) {
     return <div></div>
   }
-  if (isLoading) return <div className={'preloader'}><Preloader /></div>
+  if (isSubscribing) return <div className={'preloader'}><Preloader /></div>
   return <>
     <div className={'chat_dialog'}>
       <DialogHeader socket={props.socket} />
       <div className={'chat_dialog__messages'} onScroll={(e) => scrollCallback(e)} ref={messagesDiv}>{msg}</div>
-      <MessageInput socket={props.socket} chat_id={params.id}/>
+      <MessageInput {...props}/>
     </div>
   </>
 }

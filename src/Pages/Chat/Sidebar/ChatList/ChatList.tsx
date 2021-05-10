@@ -2,29 +2,48 @@ import { ChatResponse } from '../../../../Typings/ChatReponse'
 import ChatCard from './ChatCard'
 import {nanoid} from 'nanoid'
 import './ChatList.scss'
-import { useUser } from '../../../../Contexts/UserContext'
 import { useSearch } from '../../../../Contexts/SearchReducer'
-const ChatList = () => {
-  const {state} = useUser()
+import store from "../../../../Logux/store";
+import {useEffect, useState} from "react";
+const ChatList = (props: {
+  chats: ChatResponse[]
+}) => {
   const search = useSearch()
-  const ChatCards: Array<React.FunctionComponentElement<{chat: ChatResponse}>> = []
-  if (search.state.chats) 
-    search.state.chats.forEach(user => {
-      ChatCards.push(<ChatCard chat={{
-        chat_id: '',
-        user,
-        messages: []
-      }} key={nanoid(5)}/>)
-    })
-  state.chats.forEach(chat => {
-    if (search.state.users) {
+  const [ChatCards, setChatCards] = useState<Array<React.FunctionComponentElement<{chat: ChatResponse}>>>([])
+  const listener = (chats: ChatResponse[]) => {
+    console.log(chats)
+    setChatCards([])
+    const chatArray: Array<React.FunctionComponentElement<{chat: ChatResponse}>> = []
+    if (search.state.chats)
+      search.state.chats.forEach(user => {
+        chatArray.push(<ChatCard chat={{
+          chat_id: '',
+          user,
+          messages: []
+        }} key={nanoid(5)}/>)
+      })
+    chats.forEach((chat: any) => {
+      if (search.state.users) {
         if (chat.user.username.toLowerCase().includes(search.state.users.toLowerCase())) {
-          ChatCards.push(<ChatCard chat={chat} key={nanoid(5)}/>)
+          chatArray.push(<ChatCard chat={chat} key={nanoid(5)}/>)
         }
-    }
-    else 
-      ChatCards.push(<ChatCard chat={chat} key={nanoid(5)}/>)
-  })
+      }
+      else {
+        chatArray.push(<ChatCard chat={chat} key={nanoid(5)}/>)
+      }
+    })
+    setChatCards(chatArray)
+  }
+  useEffect(() => {
+    listener(store.getState().userReducer.chats)
+    store.subscribe(() => {
+      listener(store.getState().userReducer.chats)
+    })
+  }, []);
+  useEffect(() => {
+    listener(store.getState().userReducer.chats)
+  }, [search.state.chats]);
+
   return <>
     <div className={'chat_list'}>{ChatCards}</div>
   </>
