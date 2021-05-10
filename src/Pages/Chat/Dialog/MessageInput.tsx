@@ -1,11 +1,9 @@
 import {useRef, useState} from 'react'
 import { useDialog } from '../../../Contexts/DialogContext'
 import { encryptMessage } from '../../../Utils/encrypt'
+import {Props} from "../../Home/Home";
 
-const MessageInput: React.FunctionComponent<{
-  socket: WebSocket,
-  chat_id: string
-}> = (props) => {
+const MessageInput: React.FunctionComponent<Props> = (props) => {
   const [message, setMessage] = useState('')
   const {state} = useDialog()
   const handleInput = (e: any) => {
@@ -13,22 +11,16 @@ const MessageInput: React.FunctionComponent<{
   }
   const inputRef = useRef<HTMLInputElement>(null)
   const handleSend = (e: any) => {
+    console.log(props.chat)
     e.preventDefault()
     const msg = encryptMessage(
       localStorage.getItem('key'),
       {
         text: message,
       },
-      state.pub_key
+      props.chat.pub_key
     )
-    props.socket.send(JSON.stringify(
-      {
-        action: 'send_message',
-        chatId: props.chat_id,
-        content: msg,
-        token: localStorage.getItem('token'),
-      }
-  ))
+    props.sendMessage(msg, props.chat.chat_id, localStorage.getItem('user_id'))
     if (inputRef.current)
       inputRef.current.value = ''
       setMessage('')
@@ -37,9 +29,9 @@ const MessageInput: React.FunctionComponent<{
     <div className={'chat_dialog__input'}>
         <div className={'chat_dialog__input-wrap'}>
             <form action="" onSubmit={(e) => handleSend(e)}>
-                <input type={'text'} placeholder={'Write a message...'} onInput={(e) => handleInput(e)} ref={inputRef}/>    
+                <input type={'text'} placeholder={'Write a message...'} onInput={(e) => handleInput(e)} ref={inputRef}/>
                 <button type={'submit'} className={'material-icons'}>send</button>
-            </form>    
+            </form>
         </div>
     </div>
   </>

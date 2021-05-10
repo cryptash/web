@@ -3,6 +3,8 @@ import { decryptMessage } from "../../../Utils/decrypt"
 import { formatTime } from '../../../Utils/formatDate'
 import TimeAgo from 'timeago-react';
 import { useParams } from "react-router";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../Reducers";
 const Message: React.FunctionComponent<{
   content: string
   pub_key: string
@@ -13,9 +15,10 @@ const Message: React.FunctionComponent<{
   socket: WebSocket
   subscribeToScroll: Function
 }> = (props) => {
+  const pub_key = useSelector((state: RootState) => state.chatReducer.pub_key)
   let content:string = useMemo(() => {
     try {
-      return decryptMessage(localStorage.getItem('key'), props.content, props.pub_key).text
+      return decryptMessage(localStorage.getItem('key'), props.content, pub_key).text
     } catch (error) {
       console.log({error, props})
       return ''
@@ -30,15 +33,15 @@ const Message: React.FunctionComponent<{
     const rect = messageRef.current?.getBoundingClientRect()
     if (rect) {
       if (rect.top > 0) {
-        console.log('message read by me' + props.id)
-          props.socket.send(JSON.stringify({
-            action: 'mark_as_read',
-            chatId: params.id,
-            messageId: props.id,
-            token: localStorage.getItem('token')
-          }))
-          isActionSent.current = true
-          setRead(true)
+        // console.log('message read by me' + props.id)
+          // props.socket.send(JSON.stringify({
+          //   action: 'mark_as_read',
+          //   chatId: params.id,
+          //   messageId: props.id,
+          //   token: localStorage.getItem('token')
+          // }))
+          // isActionSent.current = true
+          // setRead(true)
       }
     }
   }
@@ -48,14 +51,14 @@ const Message: React.FunctionComponent<{
         return a()
     }
     if (!isRead && props.fromMe) {
-      props.socket.addEventListener('message', (ev) => {
-        const response = JSON.parse(ev.data)
-        if (response.action === 'message_read_by_user') {
-          if (response.data.chat_id === params.id && response.data.message_id === props.id){
-            setRead(true)
-          }
-        }
-      })
+      // props.socket.addEventListener('message', (ev) => {
+      //   const response = JSON.parse(ev.data)
+      //   if (response.action === 'message_read_by_user') {
+      //     if (response.data.chat_id === params.id && response.data.message_id === props.id){
+      //       setRead(true)
+      //     }
+      //   }
+      // })
     }
   }, [isRead])
   useEffect(() => {
