@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import TimeAgo from "timeago-react";
 import UserPicture from "../../../../Components/UserPicture/UserPicture";
 import config from "../../../../config";
@@ -6,11 +6,26 @@ import { ChatResponse } from "../../../../Typings/ChatReponse";
 import { decryptMessage } from "../../../../Utils/decrypt";
 import { formatTime } from "../../../../Utils/formatDate";
 import { useHistory } from 'react-router-dom';
+import {useDispatch} from "@logux/redux";
+import {createChat} from "../../../../Reducers";
+import store from "../../../../Logux/store";
 
 const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
   const {chat} = props
   const [isRedirect, SetRedirect] = useState(false)
   let history = useHistory();
+  const dispatch = useDispatch()
+  useEffect(() => {
+    store.client.log.type('chat/create/done', (action: {
+      type: 'chat/create/done',
+      payload: {
+        chat_id: string
+      }
+    }, meta) => {
+      history.push(`/${action.payload.chat_id}`)
+    })
+  }, []);
+
   console.log(chat.user.username, chat.messages[0] ? chat.messages[0].date : '')
   const generateText = () => {
     if (chat.messages[0]) {
@@ -26,26 +41,7 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
   }
   const handleClick = (e: any) => {
     if (!chat.chat_id) {
-      const headers = new Headers({
-        'Content-Type': 'application/json',
-      })
-      headers.append( 'Authorization', `${localStorage.getItem('token')}`)
-      fetch(config.server_url + 'api/chat/create', {
-        method: 'POST',
-        body: JSON.stringify({
-          user_id: chat.user.user_id,
-        }),
-        headers,
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.statusCode !== 200) {
-            alert(res.message)
-          } else {
-            chat.chat_id = res.chat_id
-            SetRedirect(true)
-          }
-        })
+      dispatch.sync(createChat({user_id: chat.user.user_id}))
     }
     else {
       history.push(`/${chat.chat_id}`)

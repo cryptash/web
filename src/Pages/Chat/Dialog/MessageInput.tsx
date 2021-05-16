@@ -1,11 +1,9 @@
 import {useRef, useState} from 'react'
-import { useDialog } from '../../../Contexts/DialogContext'
 import { encryptMessage } from '../../../Utils/encrypt'
-import {Props} from "../../Home/Home";
+import {connector, Props} from "../../../Logux/connect";
 
 const MessageInput: React.FunctionComponent<Props> = (props) => {
   const [message, setMessage] = useState('')
-  const {state} = useDialog()
   const handleInput = (e: any) => {
     setMessage(e.target.value)
   }
@@ -37,4 +35,4 @@ const MessageInput: React.FunctionComponent<Props> = (props) => {
   </>
 }
 
-export default MessageInput
+export default connector(MessageInput)

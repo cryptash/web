@@ -14,6 +14,15 @@ export type setChatIdAction = ReturnType<typeof setChatId>;
 export const getMessages = actionCreator<{ pg: number, chat_id: string }>("chat/messages/get");
 export type getMessagesAction = ReturnType<typeof getMessages>;
 
+export const setMessageRead = actionCreator<{ message_id: string, chat_id: string }>("chat/message/read");
+export type setMessageReadAction = ReturnType<typeof setMessageRead>;
+
+export const searchUsers = actionCreator<{ query: string }>("users/search");
+export type searchUsersAction = ReturnType<typeof searchUsers>;
+
+export const createChat = actionCreator<{ user_id: string }>("chat/create");
+export type createChatAction = ReturnType<typeof createChat>;
+
 export const sendMessage = actionCreator<{
   content: string,
   from: string

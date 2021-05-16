@@ -4,7 +4,9 @@ import { formatTime } from '../../../Utils/formatDate'
 import TimeAgo from 'timeago-react';
 import { useParams } from "react-router";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../Reducers";
+import {RootState, setMessageRead} from "../../../Reducers";
+import {useDispatch} from "@logux/redux";
+import store from "../../../Logux/store";
 const Message: React.FunctionComponent<{
   content: string
   pub_key: string
@@ -28,38 +30,31 @@ const Message: React.FunctionComponent<{
   const messageRef = useRef<HTMLDivElement>(null)
   const isActionSent = useRef(false)
   const params: {id: string} = useParams()
+  const chat = useSelector((x: RootState) => x.chatReducer)
+  const dispatch = useDispatch()
   const scrollCallback = () => {
     if (isRead || props.fromMe || isActionSent.current) return
     const rect = messageRef.current?.getBoundingClientRect()
     if (rect) {
       if (rect.top > 0) {
-        // console.log('message read by me' + props.id)
-          // props.socket.send(JSON.stringify({
-          //   action: 'mark_as_read',
-          //   chatId: params.id,
-          //   messageId: props.id,
-          //   token: localStorage.getItem('token')
-          // }))
-          // isActionSent.current = true
-          // setRead(true)
+        console.log('message read by me ' + props.id)
+        isActionSent.current = true
+        dispatch.sync(setMessageRead({
+          chat_id: chat.chat_id,
+          message_id: props.id
+        })).then(() => isActionSent.current = false)
+          setRead(true)
       }
     }
   }
   useEffect(() => {
-    if (!isRead && !props.fromMe) {
-        const a = props.subscribeToScroll(scrollCallback)
-        return a()
-    }
-    if (!isRead && props.fromMe) {
-      // props.socket.addEventListener('message', (ev) => {
-      //   const response = JSON.parse(ev.data)
-      //   if (response.action === 'message_read_by_user') {
-      //     if (response.data.chat_id === params.id && response.data.message_id === props.id){
-      //       setRead(true)
-      //     }
-      //   }
-      // })
-    }
+    // if (!isRead)
+    //   store.subscribe(() => {
+    //     const messages = store.getState().chatReducer.messages
+    //     if (messages.filter((m: any) => m.message_id === props.id)[0].read && !isRead) {
+    //       setRead(true)
+    //     }
+    //   })
   }, [isRead])
   useEffect(() => {
     scrollCallback()

@@ -1,15 +1,13 @@
 import SidebarHeader from "./Header/Header"
 import './Sidebar.scss'
 import ChatList from "./ChatList/ChatList"
-import { useUser } from "../../../Contexts/UserContext"
 import SidebarSearch from "./Search/Search"
 import { SearchProvider } from "../../../Contexts/SearchReducer"
 import {useScreen} from "../../../Contexts/ScreenContext";
 import {useEffect, useState} from "react";
-import {Props} from "../../Home/Home";
+import {connector, Props} from "../../../Logux/connect";
 
 const Sidebar = (props: Props) => {
-  const {state} = useUser()
   const screen = useScreen()
   const [isOpened, setOpen] = useState(screen.state.width > 700)
   useEffect(() => {
@@ -24,9 +22,9 @@ const Sidebar = (props: Props) => {
         setOpen(!isOpened)
       }}/>
       <SidebarSearch isOpened={isOpened} setOpened={(_: boolean) => setOpen(_)} />
-      <ChatList chats={props.user.chats}/>
+      <ChatList/>
     </div>
   </SearchProvider>
   </>
 }
-export default Sidebar;
+export default connector(Sidebar);

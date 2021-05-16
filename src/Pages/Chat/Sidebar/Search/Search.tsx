@@ -1,7 +1,10 @@
 import config from '../../../../config'
 import { useSearch } from '../../../../Contexts/SearchReducer'
 import './Search.scss'
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
+import {useDispatch} from "@logux/redux";
+import {searchUsers} from "../../../../Reducers";
+import store from "../../../../Logux/store";
 
 const SidebarSearch = (props: {
   isOpened: boolean,
@@ -9,6 +12,19 @@ const SidebarSearch = (props: {
 }) => {
   const search = useSearch()
   const input = useRef<HTMLInputElement>(null)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    store.client.log.type('users/search/done', (action: {
+      type: 'users/search/done',
+      payload: any
+    }, meta) => {
+      search.dispatch({
+        type: 'CHANGE_CHATS',
+        payload: {chats: action.payload.users}
+      })
+    })
+  }, []);
+
   const handleSearch = (e: {target: {value: string}}) => {
     search.dispatch({type: 'CHANGE_FILTER', payload: {
       type: 'users',
@@ -20,35 +36,7 @@ const SidebarSearch = (props: {
       }})
       return
     }
-    if (localStorage.getItem('token')) {
-      const headers = new Headers({
-        'Content-Type': 'application/json',
-      })
-      headers.append( 'Authorization', `${localStorage.getItem('token')}`)
-      fetch(config.server_url + 'api/users/search', {
-        method: 'POST',
-        body: JSON.stringify({
-          query: e.target.value,
-        }),
-        headers,
-      })
-      .then((res) => res.json())
-      .then((res: {statusCode: number, message?: string, data?: {users: Array<{
-        username: string
-        picture: string
-        user_id: string
-    }>}}) => {
-        if (res.statusCode !== 200) {
-          alert(res.message)
-        } else {
-          if (res.data)
-            search.dispatch({
-              type: 'CHANGE_CHATS',
-              payload: {chats: res.data.users}
-            })
-        }
-      })
-    }
+    dispatch.sync(searchUsers({query: e.target.value}))
   }
   return (<>
     <div className={'chat_sidebar__search'}>

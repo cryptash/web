@@ -1,10 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Link, Redirect} from "react-router-dom";
+import React, {useState} from "react";
+import {Link, useHistory} from "react-router-dom";
 import './Register.scss';
-import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
 import { generateKeyPair } from "../../Utils/keysUtils";
-
+import {Client} from "@logux/client";
+import {AES} from 'crypto-js'
+import store from "../../Logux/store";
 const Register: React.FunctionComponent = () => {
   const [key, setKeys] = useState(generateKeyPair())
   const [credentials, setCredentials] = useState({
@@ -12,9 +13,8 @@ const Register: React.FunctionComponent = () => {
     password: ''
   })
   const [doesMeetReqs, setMeetReq] = useState(false)
-  const [stage, setStage] = useState(0)
   const [isSame, setSame] = useState(false)
-  const [isLoading, setLoading] = useState(true)
+  let history = useHistory();
   const handleChange = (e: any) => {
     console.log(e.target.name, e.target.value)
     if (e.target.name === 'verify_password') {
@@ -41,42 +41,39 @@ const Register: React.FunctionComponent = () => {
         }
     }
   }
-  const handleRegister = (credentials: {
-    username?: string,
-    password?: string,
-    key?:string
-  }, stage: number, setStage: any) => {
-    if (!credentials.password || !credentials.username) return
+  function register (username: string, password: string, key: {
+    private_key: string, public_key: string
+  }) {
+    if (!password || !username) return
     if (!isSame) return
-    let pass_regexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,31}$/ // 8 to 31 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character
-    if (!credentials.password.match(pass_regexp)) {
-
-
+    if (!doesMeetReqs) return
+    if (username.length < 3) {
+      alert("Username must be at least 3 symbols")
+      return
     }
-    if (stage === 0) {
-        fetch(config.server_url + 'api/register', {
-        method: 'POST',
-        body: JSON.stringify({...credentials, pub_key: key.public_key}),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        })
-            .then((res) => res.json())
-            .then((res) => {
-            if (res.statusCode !== 200) {
-                alert(res.message)
-            } else {
-                localStorage.setItem('token', res.token)
-                setStage(1)
-            }
-            })
-        }
-        else {
-          if (key.private_key != null) {
-              localStorage.setItem('key', key.private_key)
-              if (localStorage.getItem('key')) setStage(2)
-          }
-        }
+    let pass_regexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,31}$/ // 8 to 31 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character
+    if (!password.match(pass_regexp)) {
+      setMeetReq(false)
+      return
+    }
+    let client = new Client({
+      subprotocol: '1.0.0',
+      server: config.socket_url,
+      userId: 'anonymous'
+    })
+    client.on('add', (action: any) => {
+      if (action.type === 'register/done') {
+        localStorage.setItem('user_id', action.user_id)
+        localStorage.setItem('token', action.token)
+        localStorage.setItem('key', key.private_key)
+        store.client.changeUser(action.user_id,action.token)
+        history.push(`/`)
+      } else if (action.type === 'logux/undo') {
+        alert(action.reason)
+      }
+    })
+    client.start()
+    client.log.add({ type: 'register', username, password, private_key: AES.encrypt(key.private_key, password).toString(), pub_key: key.public_key}, { sync: true })
   }
   const firstStage = () => {
     return (
@@ -90,52 +87,6 @@ const Register: React.FunctionComponent = () => {
         </>
   )
   }
-  const keyInput = useRef(null)
-  const secondStage = () => {
-    localStorage.setItem('key', key.private_key)
-    if (stage === 1) return (
-        <>
-          <h3>One more thing</h3>
-          <h4>Please, write down your private key!</h4>
-          <div className={'register_main__form___key-wrapper'}>
-          <input key={key.private_key} name={'key'} type={'text'} defaultValue={key.private_key} className={'register_main__form___key-wrapper'} ref={keyInput}></input>
-          <span className="material-icons outlined register_main__form___copy" onClick={(e) => {
-            if (keyInput.current){
-              //@ts-ignore
-              keyInput.current.select()
-            } 
-            document.execCommand("copy")
-          }}>
-            content_copy
-          </span>
-          </div>
-          <button type={'submit'} className={'register_main__form___submit'}>Create account</button>
-        </>
-    )
-    else return <Redirect to={'/'} />
-  }
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      fetch(config.server_url + 'api/checkAuth', {
-        method: 'POST',
-        body: JSON.stringify({token: localStorage.getItem('token')}),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-          .then((res) => res.json())
-          .then((res) => {
-            if (res.statusCode === 200) {
-              setLoading(false)
-              setStage(2)
-            }
-          })
-    }
-    else {
-      setLoading(false)
-    }
-  }, [])
-  if (isLoading) return <Preloader />
   return <>
     <div className="register_main">
       <div className={'register_main__header'}>
@@ -145,9 +96,9 @@ const Register: React.FunctionComponent = () => {
       <div className={'register_main__block'}>
         <form className={'register_main__form'} onSubmit={(e) =>{
           e.preventDefault()
-          handleRegister(credentials, stage, setStage)
+          register(credentials.username, credentials.password, key)
         }}>
-          {stage ? secondStage() : firstStage()}
+          {firstStage()}
         </form>
       </div>
     </div>

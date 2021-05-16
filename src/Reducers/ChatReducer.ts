@@ -28,14 +28,13 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       state.messages.push(...data)
       return {...state}
     }
+
     case 'chat/load_messages/done': {
       state.messages = [...data.messages, ...state.messages]
       state.pub_key = data.pub_key
       return {...state}
     }
     case 'chat/change': {
-      // store.dispatch.sync({ type: 'logux/unsubscribe', channel: `chat/${state.chat_id}` })
-      // store.dispatch.sync({ type: 'logux/subscribe', channel: `chat/${action.payload.id}` })
       return {
         username: '',
         user_id: '',
@@ -58,7 +57,8 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return state
     }
     case 'chat/message/setId': {
-      state.messages[state.messages.length - 1].message_id = action.payload.id
+      if (state.chat_id === action.payload.chat_id)
+        state.messages[state.messages.length - 1].message_id = action.payload.id
       return state
     }
     case 'chat/message/create': {
@@ -85,9 +85,8 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return state
     }
     case 'chat/message/read': {
-      const msg = state.messages.filter(x => x.message_id === data.id)[0]
-      msg.read = true
-      console.log(state)
+      if (action.payload.chat_id === state.chat_id)
+        state.messages.filter(m => m.message_id === action.payload.message_id)[0].read = true
       return state
     }
     case 'chat/data/set': {
