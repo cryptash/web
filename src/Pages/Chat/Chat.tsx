@@ -8,45 +8,38 @@ import Dialog from "./Dialog/Dialog"
 import { useUser} from '../../Contexts/UserContext'
 import { DialogProvider } from "../../Contexts/DialogContext"
 import {useSubscription} from "@logux/redux";
-import {Props} from "../Home/Home";
-
+import store from "../../Logux/store";
+import {badge} from "@logux/client";
+import {badgeStyles} from "@logux/client/badge/styles";
+import {connector, Props} from "../../Logux/connect";
+import {Provider} from "react-redux";
 const Chat: React.FunctionComponent<Props> = (props) => {
-  console.log(props)
   const params: {id: string} = useParams()
-  const socket = useRef(new WebSocket(config.socket_url))
-  const token = localStorage.getItem('token')
-  const {dispatch} = useUser()
   const isSubscribing = useSubscription([`user/${localStorage.getItem('user_id')}`]);
-  // Function to bind socket and listen to it's actions
-  const onSocketMessage = (event: any) => {
-    const response = JSON.parse(event.data)
-    console.dir(response)
-    if (!response.data) {
-      return
-    }
-    if (response.data.message === 'Successful connection') {
-      console.warn(`Socket: Successful connection`)
-    }
-    if (response.action === 'new_message') {
-      const message = response.data.message
-      dispatch({type: 'ADD_MESSAGE', payload: message})
-    }
-  }
   if (params.id === undefined) {
     console.log('No chat')
-    return <div className={'chat'}>
-    <Sidebar {...props}/>
-    </div>
+    return (
+      <Provider store={store}>
+        <div className={'chat'}>
+          <Sidebar />
+        </div>
+      </Provider>
+    )
   }
+
   if (isSubscribing) {
     return <Preloader />
   }
 
-  return <div className={'chat'}>
-      <Sidebar {...props}/>
-      <DialogProvider>
-        <Dialog {...props}/>
-      </DialogProvider>
-    </div>
+  return (
+    <Provider store={store}>
+      <div className={'chat'}>
+        <Sidebar/>
+        <DialogProvider>
+          <Dialog/>
+        </DialogProvider>
+      </div>
+    </Provider>
+  )
 }
-export default Chat
+export default connector(Chat)

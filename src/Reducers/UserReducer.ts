@@ -27,6 +27,7 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
       const chat = state.chats.filter(c => c.chat_id === action.payload.chat_id)
       console.log(chat)
       if (chat[0]) {
+        const i = state.chats.indexOf(chat[0])
         chat[0].messages[0] = {
           content: action.payload.content,
           read: action.payload.read,
@@ -35,9 +36,11 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
           fromMe: action.payload.from === localStorage.getItem('user_id')
         }
         chat[0].messageAt = action.payload.date
+        if (i !== 0) {
+          state.chats = state.chats.filter(x => x !== chat[0])
+          state.chats.unshift(chat[0])
+        }
       }
-      state.chats = state.chats.filter(x => x !== chat[0])
-      state.chats.unshift(chat[0])
       return state
     }
     case 'user/get_info/done': {

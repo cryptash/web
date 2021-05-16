@@ -2,39 +2,24 @@ import React, {useState, useEffect} from 'react';
 import {Redirect} from 'react-router-dom';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
-import {useSubscription} from "@logux/redux";
 import { UserProvider } from '../../Contexts/UserContext';
 import Chat from '../Chat/Chat';
-import {Client} from "@logux/client";
-import {changeChat, getMessages, RootState, sendMessage, setChatId} from "../../Reducers";
-import {LoguxDispatch} from "@logux/redux/create-store-creator";
-import {Action} from "redux";
-import {connect, ConnectedProps} from "react-redux";
+import {badge, Client} from "@logux/client";
+import store from "../../Logux/store";
+import {badgeStyles} from "@logux/client/badge/styles";
+import {Provider} from "react-redux";
+badge(store.client, {messages: {
+    synchronized: 'Sent all unsent messages.',
+    disconnected: 'No connection to server.',
+    wait: 'Waiting...',
+    sending: 'Sending...',
+    error: 'Error occurred. Please, try again!',
+    protocolError: 'Error occurred. Please, contact admins!',
+    syncError: 'Error while syncing...',
+    denied: 'Access denied'
+  }, styles: badgeStyles })
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    user: state.userReducer,
-    chat: state.chatReducer
-  };
-};
-
-const mapDispatchToProps = (dispatch: LoguxDispatch<Action>) => ({
-  changeChat: (id: string) => {
-    dispatch(changeChat({ id }))
-  },
-  getMessages: (pg: number, chat_id: string) => {
-    dispatch(getMessages({ pg, chat_id }))
-  },
-  setChatId: (id: string) => {
-    dispatch(setChatId({ id }))
-  },
-  sendMessage: (content: string, chat_id: string, from: string) => {
-    dispatch.sync(sendMessage({content, chat_id, from}))
-  }
-});
-const connector = connect(mapStateToProps, mapDispatchToProps as any);
-export type Props = ConnectedProps<typeof connector>;
-const Home: React.FunctionComponent<Props> = (props) => {
+const Home= () => {
   const [isLoggined, setLoginned] = useState(0)
   const token = localStorage.getItem('token')
   // Check if authenticated
@@ -47,6 +32,7 @@ const Home: React.FunctionComponent<Props> = (props) => {
       })
       client.on('add', (action: any) => {
         if (action.type === 'user/check/done') {
+          store.client.start()
           setLoginned(2)
         } else if (action.type === 'logux/undo') {
           setLoginned(0)
@@ -66,11 +52,11 @@ const Home: React.FunctionComponent<Props> = (props) => {
   if (isLoggined === 1) {
     return <Redirect to={'/login'}/>
   }
-  return (<UserProvider>
-    <Chat {...props}/>
-  </UserProvider>
+  return (<Provider store={store}>
+    <Chat/>
+  </Provider>
   )
   
 }
 
-export default connector(Home);
+export default Home;

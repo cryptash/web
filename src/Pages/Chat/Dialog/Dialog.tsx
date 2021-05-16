@@ -7,16 +7,14 @@ import MessageInput from "./MessageInput";
 import { useParams } from "react-router";
 import { useDialog } from "../../../Contexts/DialogContext";
 import DialogHeader from "./DialogHeader";
-import { useUser } from "../../../Contexts/UserContext";
 import {useDispatch, useSubscription} from "@logux/redux";
-import {Props} from "../../Home/Home";
 import {useSelector} from "react-redux";
 import {getMessages, RootState} from "../../../Reducers";
 import store from "../../../Logux/store";
+import {connector, Props} from "../../../Logux/connect";
 
 const Dialog: React.FunctionComponent<Props> = (props) => {
   let params: {id: string} = useParams()
-  // const [id, setId] = useState('')
   const dispatch = useDispatch()
   const page = useRef(0)
   const prevScrollHeight = useRef(0)
@@ -49,14 +47,6 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
         prevScrollHeight.current = messagesDiv.current? messagesDiv.current.scrollHeight : 0
         setRequested(true)
         dispatch.sync(getMessages({pg: page.current, chat_id: params.id})).then(() => setRequested(false))
-        // props.socket.send(
-        //   JSON.stringify({
-        //     action: 'get_messages',
-        //     chat_id: params.id,
-        //     pg: page.current,
-        //     jwt: localStorage.getItem('token'),
-        //   })
-        // )
       }
     }
   }
@@ -107,7 +97,7 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
         read: boolean,
         message_id: string
       }) => {
-        return msgComp.push(<Message socket={props.socket} id={m.message_id} subscribeToScroll={(c: Function) => subcribeToScroll(c)} isRead={m.read} content={m.content} pub_key={props.chat.pub_key} key={nanoid(6)} fromMe={m.fromMe} date={m.date} />)
+        return msgComp.push(<Message socket={props.socket} id={m.message_id} subscribeToScroll={(c: Function) => subcribeToScroll(c)} isRead={m.read} content={m.content} pub_key={props.chat.pub_key} key={m.message_id} fromMe={m.fromMe} date={m.date} />)
       });
       setMsg(msgComp)
     })
@@ -142,4 +132,4 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
     </div>
   </>
 }
-export default Dialog
+export default connector(Dialog)
