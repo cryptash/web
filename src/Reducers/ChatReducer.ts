@@ -63,7 +63,6 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         if (state.read_messages.includes(action.payload.id))
           state.messages[state.messages.length - 1].read = true
       }
-
       return state
     }
     case 'chat/message/create': {
@@ -90,7 +89,6 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return state
     }
     case 'chat/message/read': {
-      console.info(action.payload.message_id, 'read')
       if (action.payload.chat_id === state.chat_id) {
         const message = state.messages.filter(m => m.message_id === action.payload.message_id)[0]
         if (message)
