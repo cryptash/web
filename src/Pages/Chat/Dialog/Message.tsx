@@ -48,13 +48,13 @@ const Message: React.FunctionComponent<{
     }
   }
   useEffect(() => {
-    // if (!isRead)
-    //   store.subscribe(() => {
-    //     const messages = store.getState().chatReducer.messages
-    //     if (messages.filter((m: any) => m.message_id === props.id)[0].read && !isRead) {
-    //       setRead(true)
-    //     }
-    //   })
+    if (!isRead)
+      store.subscribe(() => {
+        const messages = store.getState().chatReducer.messages
+        if (messages.filter((m: any) => m.message_id === props.id)[0].read && !isRead) {
+          setRead(true)
+        }
+      })
   }, [isRead])
   useEffect(() => {
     scrollCallback()
