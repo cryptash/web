@@ -1,7 +1,6 @@
-import {useEffect, useState} from "react";
+import {FunctionComponent, useEffect, useMemo} from "react";
 import TimeAgo from "timeago-react";
 import UserPicture from "../../../../Components/UserPicture/UserPicture";
-import config from "../../../../config";
 import { ChatResponse } from "../../../../Typings/ChatReponse";
 import { decryptMessage } from "../../../../Utils/decrypt";
 import { formatTime } from "../../../../Utils/formatDate";
@@ -10,9 +9,8 @@ import {useDispatch} from "@logux/redux";
 import {createChat} from "../../../../Reducers";
 import store from "../../../../Logux/store";
 
-const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
+const ChatCard: FunctionComponent<{chat: ChatResponse}> = (props) => {
   const {chat} = props
-  const [isRedirect, SetRedirect] = useState(false)
   let history = useHistory();
   const dispatch = useDispatch()
   useEffect(() => {
@@ -21,25 +19,23 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
       payload: {
         chat_id: string
       }
-    }, meta) => {
+    }, _) => {
       history.push(`/${action.payload.chat_id}`)
     })
-  }, []);
-
-  console.log(chat.user.username, chat.messages[0] ? chat.messages[0].date : '')
-  const generateText = () => {
+  }, [history]);
+  const text = useMemo(() => {
     if (chat.messages[0]) {
-        try {
-          return decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text
-        }
-        catch (e) {
-          console.info(e.text)
-          return ''
-        }
+      try {
+        return decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text
+      }
+      catch (e) {
+        console.info(e.text)
+        return ''
+      }
     }
     return ''
-  }
-  const handleClick = (e: any) => {
+  }, [chat.messages, chat.user.pub_key]);
+  const handleClick = (_: any) => {
     if (!chat.chat_id) {
       dispatch.sync(createChat({user_id: chat.user.user_id}))
     }
@@ -58,9 +54,7 @@ const ChatCard: React.FunctionComponent<{chat: ChatResponse}> = (props) => {
           </span>
         </div>
         <div className={'chat_list__card___bottom'}>
-          <span className={'chat_list__card___bottom____content'}>{
-            generateText()
-          }</span>
+          <span className={'chat_list__card___bottom____content'}>{text}</span>
         </div>
       </div>
     </div>

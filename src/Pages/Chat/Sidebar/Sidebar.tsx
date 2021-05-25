@@ -5,10 +5,12 @@ import SidebarSearch from "./Search/Search"
 import { SearchProvider } from "../../../Contexts/SearchReducer"
 import {useScreen} from "../../../Contexts/ScreenContext";
 import {useEffect, useState} from "react";
-import {connector, Props} from "../../../Logux/connect";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../Reducers";
 
-const Sidebar = (props: Props) => {
+const Sidebar = () => {
   const screen = useScreen()
+  const user = useSelector((state: RootState) => state.userReducer)
   const [isOpened, setOpen] = useState(screen.state.width > 700)
   useEffect(() => {
     setOpen(screen.state.width > 700)
@@ -17,7 +19,7 @@ const Sidebar = (props: Props) => {
   return <>
   <SearchProvider>
     <div className={`chat_sidebar ${isOpened ? 'opened' : 'closed'}`}>
-      <SidebarHeader user={{username: props.user.username, picture: props.user.picture}} setOpen={() => {
+      <SidebarHeader user={{username: user.username, picture: user.picture}} setOpen={() => {
         console.log(!isOpened)
         setOpen(!isOpened)
       }}/>
@@ -27,4 +29,4 @@ const Sidebar = (props: Props) => {
   </SearchProvider>
   </>
 }
-export default connector(Sidebar);
+export default Sidebar;

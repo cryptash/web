@@ -1,8 +1,6 @@
-import {ChatResponse} from "../Typings/ChatReponse";
 import {Message} from "../Typings/Message";
-import store from "../Logux/store";
 
-type ChatState = {
+export type ChatState = {
   messages: Message[],
   username: string,
   pub_key: string,
@@ -54,12 +52,12 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         fromMe: true
       })
       console.log(state.messages)
-      return state
+      return {...state}
     }
     case 'chat/message/setId': {
       if (state.chat_id === action.payload.chat_id)
         state.messages[state.messages.length - 1].message_id = action.payload.id
-      return state
+      return {...state}
     }
     case 'chat/message/create': {
       if (state.chat_id === action.payload.chat_id && action.payload.from !== localStorage.getItem('user_id')) {
@@ -73,41 +71,27 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
           })
         }
       }
-      return state
+      return {...state}
     }
     case 'chat/change_key': {
       state.pub_key = action.payload
-      return state
+      return {...state}
     }
     case 'chat/set_id': {
       state.chat_id = action.payload.id
       console.log(state)
-      return state
+      return {...state}
     }
     case 'chat/message/read': {
       if (action.payload.chat_id === state.chat_id)
         state.messages.filter(m => m.message_id === action.payload.message_id)[0].read = true
-      return state
+      return {...state}
     }
     case 'chat/data/set': {
       return {...state, ...data}
     }
     default: {
-      return state
-    }
-  }
-}
-const userReducer = (state = initialState, action: {type: string, payload: any}) => {
-  switch (action.type) {
-    case 'login/done': {
-      localStorage.setItem('token', action.payload.token)
-      return state
-    }
-    case 'user/get_info/done': {
-      return action.payload
-    }
-    default: {
-      return state
+      return {...state}
     }
   }
 }

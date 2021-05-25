@@ -1,4 +1,3 @@
-import config from '../../../../config'
 import { useSearch } from '../../../../Contexts/SearchReducer'
 import './Search.scss'
 import {useEffect, useRef} from "react";
@@ -17,13 +16,13 @@ const SidebarSearch = (props: {
     store.client.log.type('users/search/done', (action: {
       type: 'users/search/done',
       payload: any
-    }, meta) => {
+    }, _) => {
       search.dispatch({
         type: 'CHANGE_CHATS',
         payload: {chats: action.payload.users}
       })
     })
-  }, []);
+  }, [search]);
 
   const handleSearch = (e: {target: {value: string}}) => {
     search.dispatch({type: 'CHANGE_FILTER', payload: {
@@ -40,7 +39,7 @@ const SidebarSearch = (props: {
   }
   return (<>
     <div className={'chat_sidebar__search'}>
-      <div className={'chat_sidebar__search___bar'} onClick={(e) => {
+      <div className={'chat_sidebar__search___bar'} onClick={(_) => {
         if (!props.isOpened) {
           if (input.current !== null) {
             setTimeout(() => {props.setOpened(true); if (input.current !== null) input.current.focus()}, 100)

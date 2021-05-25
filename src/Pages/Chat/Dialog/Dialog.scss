@@ -24,6 +24,14 @@
       max-width: 70%;
       padding: 10px;
       margin-top: 2px;
+      &--link {
+        white-space: nowrap;
+        width: min-content;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        display: inline-block;
+      }
       &.fromMe {
         color: black;
         background: #FFFFFF;

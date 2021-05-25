@@ -1,24 +1,27 @@
 import {useRef, useState} from 'react'
 import { encryptMessage } from '../../../Utils/encrypt'
-import {connector, Props} from "../../../Logux/connect";
+import {RootState, sendMessage} from "../../../Reducers";
+import {useSelector} from "react-redux";
+import {useDispatch} from "@logux/redux";
 
-const MessageInput: React.FunctionComponent<Props> = (props) => {
+const MessageInput = () => {
   const [message, setMessage] = useState('')
+  const chat = useSelector((state: RootState) => state.chatReducer)
+  const dispatch = useDispatch()
   const handleInput = (e: any) => {
     setMessage(e.target.value)
   }
   const inputRef = useRef<HTMLInputElement>(null)
   const handleSend = (e: any) => {
-    console.log(props.chat)
     e.preventDefault()
     const msg = encryptMessage(
       localStorage.getItem('key'),
       {
         text: message,
       },
-      props.chat.pub_key
+      chat.pub_key
     )
-    props.sendMessage(msg, props.chat.chat_id, localStorage.getItem('user_id'))
+    dispatch.sync(sendMessage({chat_id: chat.chat_id, content: msg, from: localStorage.getItem('user_id')}))
     if (inputRef.current)
       inputRef.current.value = ''
       setMessage('')
@@ -35,4 +38,4 @@ const MessageInput: React.FunctionComponent<Props> = (props) => {
   </>
 }
 
-export default connector(MessageInput)
+export default MessageInput

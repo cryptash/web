@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {Redirect} from 'react-router-dom';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
-import { UserProvider } from '../../Contexts/UserContext';
 import Chat from '../Chat/Chat';
 import {badge, Client} from "@logux/client";
 import store from "../../Logux/store";
@@ -52,9 +51,10 @@ const Home= () => {
   if (isLoggined === 1) {
     return <Redirect to={'/login'}/>
   }
-  return (<Provider store={store}>
-    <Chat/>
-  </Provider>
+  return (
+    <Provider store={store}>
+      <Chat/>
+    </Provider>
   )
   
 }
