@@ -4,9 +4,10 @@ export type ChatState = {
   messages: Message[],
   username: string,
   pub_key: string,
-  picture: string
+  picture: string,
   user_id: string,
-  chat_id: string
+  chat_id: string,
+  read_messages: string[]
 }
 
 
@@ -17,6 +18,7 @@ const initialState: ChatState = {
   pub_key: '',
   chat_id: '',
   messages: [],
+  read_messages: []
 }
 const chatReducer = (state = initialState, action: {type: string, payload?: any, id?: string}) => {
   const data = action.payload
@@ -40,6 +42,7 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         pub_key: '',
         chat_id: action.payload.id,
         messages: [],
+        read_messages: []
       }
     }
     case 'chat/messages/send': {
@@ -55,9 +58,12 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return {...state}
     }
     case 'chat/message/setId': {
-      if (state.chat_id === action.payload.chat_id)
+      if (state.chat_id === action.payload.chat_id) {
         state.messages[state.messages.length - 1].message_id = action.payload.id
-      return {...state}
+        if (state.read_messages.includes(action.payload.id))
+          state.messages[state.messages.length - 1].read = true
+      }
+      return state
     }
     case 'chat/message/create': {
       if (state.chat_id === action.payload.chat_id && action.payload.from !== localStorage.getItem('user_id')) {
@@ -83,9 +89,14 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return {...state}
     }
     case 'chat/message/read': {
-      if (action.payload.chat_id === state.chat_id)
-        state.messages.filter(m => m.message_id === action.payload.message_id)[0].read = true
-      return {...state}
+      if (action.payload.chat_id === state.chat_id) {
+        const message = state.messages.filter(m => m.message_id === action.payload.message_id)[0]
+        if (message)
+          state.messages.filter(m => m.message_id === action.payload.message_id)[0].read = true
+        else
+          state.read_messages.push(action.payload.message_id)
+      }
+      return state
     }
     case 'chat/data/set': {
       return {...state, ...data}

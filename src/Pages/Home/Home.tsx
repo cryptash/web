@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
 import Chat from '../Chat/Chat';
@@ -8,9 +8,9 @@ import store from "../../Logux/store";
 import {badgeStyles} from "@logux/client/badge/styles";
 import {Provider} from "react-redux";
 badge(store.client, {messages: {
-    synchronized: 'Sent all unsent messages.',
+    synchronized: 'Everything is up to date',
     disconnected: 'No connection to server.',
-    wait: 'Waiting...',
+    wait: 'Sending...',
     sending: 'Sending...',
     error: 'Error occurred. Please, try again!',
     protocolError: 'Error occurred. Please, contact admins!',
@@ -21,6 +21,14 @@ badge(store.client, {messages: {
 const Home= () => {
   const [isLoggined, setLoginned] = useState(0)
   const token = localStorage.getItem('token')
+  const history = useHistory()
+  const signOut = () => {
+    history.push('/login')
+    setLoginned(1)
+    localStorage.removeItem('key')
+    localStorage.removeItem('token')
+    localStorage.removeItem('user_id')
+  }
   // Check if authenticated
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -34,13 +42,13 @@ const Home= () => {
           store.client.start()
           setLoginned(2)
         } else if (action.type === 'logux/undo') {
-          setLoginned(0)
+          signOut()
         }
       })
       client.start()
       client.log.add({ type: 'user/check', token: localStorage.getItem('token')}, { sync: true })
     } else {
-      setLoginned(1)
+      signOut()
     }
   }, [token])
 

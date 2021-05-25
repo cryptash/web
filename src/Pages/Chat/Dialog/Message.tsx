@@ -57,6 +57,17 @@ const Message: React.FunctionComponent<{
         }
       }
     }
+  }
+  useEffect(() => {
+    if (!isRead)
+      store.subscribe(() => {
+        const messages = store.getState().chatReducer.messages
+        if (messages.filter((m: any) => m.message_id === props.id)[0].read && !isRead) {
+          setRead(true)
+        }
+      })
+  }, [isRead])
+  useEffect(() => {
     scrollCallback()
   }, [chat.chat_id, dispatch, isRead, props.fromMe, props.id])
   const urlRE= new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+", 'g')
