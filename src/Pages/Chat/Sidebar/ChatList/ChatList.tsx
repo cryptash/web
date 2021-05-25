@@ -4,10 +4,9 @@ import {nanoid} from 'nanoid'
 import './ChatList.scss'
 import { useSearch } from '../../../../Contexts/SearchReducer'
 import store from "../../../../Logux/store";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 const ChatList = () => {
   const search = useSearch()
-  const chat = useRef<ChatResponse[]>(store.getState().userReducer.chats)
   const [ChatCards, setChatCards] = useState<Array<React.FunctionComponentElement<{chat: ChatResponse}>>>([])
   const listener = (chats: ChatResponse[]) => {
     const chatArray: Array<React.FunctionComponentElement<{chat: ChatResponse}>> = []
@@ -33,7 +32,6 @@ const ChatList = () => {
     setChatCards(chatArray)
   }
   useEffect(() => {
-    listener(store.getState().userReducer.chats)
     store.subscribe(() => {
       listener(store.getState().userReducer.chats)
     })

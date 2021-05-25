@@ -7,7 +7,7 @@ import {Client} from "@logux/client";
 import {AES} from 'crypto-js'
 import store from "../../Logux/store";
 const Register: React.FunctionComponent = () => {
-  const [key, setKeys] = useState(generateKeyPair())
+  const [key] = useState(generateKeyPair())
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''

@@ -1,7 +1,7 @@
 import {userReducer} from "./UserReducer";
 
-import { combineReducers, Reducer } from "redux";
-import actionCreatorFactory, { isType } from "typescript-fsa";
+import { combineReducers } from "redux";
+import actionCreatorFactory from "typescript-fsa";
 import {chatReducer} from "./ChatReducer";
 
 const actionCreator = actionCreatorFactory();
@@ -25,10 +25,10 @@ export type createChatAction = ReturnType<typeof createChat>;
 
 export const sendMessage = actionCreator<{
   content: string,
-  from: string
+  from: string | null
   chat_id: string
 }>("chat/messages/send");
-export type sendMessage = ReturnType<typeof sendMessage>;
+export type sendMessageAction = ReturnType<typeof sendMessage>;
 
 export type SubscribeAction = { type: "logux/subscribe"; channel: string };
 export const subscribe = (channel: string): SubscribeAction => ({
@@ -41,7 +41,8 @@ type Actions =
   | SubscribeAction
   | getMessagesAction
   | setChatIdAction
-  | sendMessage
+  | sendMessageAction
+  | searchUsersAction
 
 
 const rootReducer = combineReducers({

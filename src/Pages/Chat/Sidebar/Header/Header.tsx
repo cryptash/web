@@ -1,6 +1,5 @@
 import UserPicture from "../../../../Components/UserPicture/UserPicture"
 import './Header.scss'
-import {useScreen} from "../../../../Contexts/ScreenContext";
 
 const SidebarHeader = (props: {
   user: {
@@ -9,9 +8,8 @@ const SidebarHeader = (props: {
   }
   setOpen: () => void
 }) => {
-  const screen = useScreen()
   return (<>
-    <div className={'chat_sidebar__header'} onClick={(e: any) => {
+    <div className={'chat_sidebar__header'} onClick={(_: any) => {
       console.log('click')
       props.setOpen()
     }}>

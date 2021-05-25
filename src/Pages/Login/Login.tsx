@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {Link, Redirect, useHistory} from "react-router-dom";
+import React, {useState} from "react";
+import {Link, useHistory} from "react-router-dom";
 import './Login.scss';
-import Preloader from "../../Components/Preloader/Preloader";
 import config from '../../config'
 import { AES } from "crypto-js";
 import {enc} from 'crypto-js'
@@ -34,7 +33,6 @@ const Login: React.FunctionComponent = () => {
     password: '',
     key: ''
   })
-  const [stage, setStage] = useState(0)
   const handleChange = (e: any) => {
     setCredentials({
       ...credentials,

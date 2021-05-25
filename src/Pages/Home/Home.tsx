@@ -59,9 +59,10 @@ const Home= () => {
   if (isLoggined === 1) {
     return <Redirect to={'/login'}/>
   }
-  return (<Provider store={store}>
-    <Chat/>
-  </Provider>
+  return (
+    <Provider store={store}>
+      <Chat/>
+    </Provider>
   )
   
 }
