@@ -3,6 +3,12 @@
   height: calc(100% - 10px - 65px);
   width: 98%;
   padding: 10px 5px;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y proximity;
+  &-message:last-child {
+    scroll-snap-align: end;
+    margin-bottom: 20px;
+  }
   &-message {
     width: auto;
     max-width: 80%;
@@ -78,6 +84,7 @@
 .chat_dialog__input {
   height: 50px;
   display: flex;
+  margin-top: 5px;
   flex-direction: column;
   justify-content: center;
   &-wrap {

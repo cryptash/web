@@ -4,7 +4,9 @@ import {RootState, sendMessage} from "../../../Reducers";
 import {useSelector} from "react-redux";
 import {useDispatch} from "@logux/redux";
 
-const MessageInput = () => {
+const MessageInput = (props: {
+  scrollDown: () => void
+}) => {
   const [message, setMessage] = useState('')
   const chat = useSelector((state: RootState) => state.chatReducer)
   const dispatch = useDispatch()
@@ -24,7 +26,8 @@ const MessageInput = () => {
     dispatch.sync(sendMessage({chat_id: chat.chat_id, content: msg, from: localStorage.getItem('user_id')}))
     if (inputRef.current)
       inputRef.current.value = ''
-      setMessage('')
+    setMessage('')
+    props.scrollDown()
   }
   return <>
     <div className={'chat_dialog__input'}>
