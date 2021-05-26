@@ -52,7 +52,7 @@ const Dialog: FunctionComponent = () => {
   const setMessages = (n: Array<JSX.Element>, isNew?: boolean) => {
     if (isNew) messages.current = [...messages.current, ...n]
     else messages.current = [...n, ...messages.current]
-
+    prevScrollHeight.current = messagesDiv.current ? messagesDiv.current.scrollHeight : 0
   }
   const renderMessages = (messages: {
     content: string,
