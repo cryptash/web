@@ -102,7 +102,7 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       return {...state, ...data}
     }
     default: {
-      return {...state}
+      return state
     }
   }
 }

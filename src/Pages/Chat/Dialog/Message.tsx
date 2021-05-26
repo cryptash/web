@@ -18,11 +18,9 @@ const Message: React.FunctionComponent<{
 }> = (props) => {
   const pub_key = useSelector((state: RootState) => state.chatReducer.pub_key)
   let content:string = useMemo(() => {
-    console.log('decrypting')
     try {
       return decryptMessage(localStorage.getItem('key'), props.content, pub_key).text
     } catch (error) {
-      console.log({error})
       return ''
     }
   }, [props.content, pub_key]);
@@ -47,7 +45,6 @@ const Message: React.FunctionComponent<{
       const rect = messageRef.current?.getBoundingClientRect()
       if (rect) {
         if (rect.top > 0) {
-          console.log('message read by me ' + props.id)
           isActionSent.current = true
           dispatch.sync(setMessageRead({
             chat_id: chat.chat_id,
@@ -62,9 +59,6 @@ const Message: React.FunctionComponent<{
 
   const urlRE = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+", 'g')
   const urls = content.match(urlRE)
-  if (urls) {
-    console.log(urls)
-  }
   const generateMessageWithUrl = () => {
     let c = content
     const res: JSX.Element[] = []

@@ -55,7 +55,6 @@ const Dialog: FunctionComponent = () => {
       read: boolean,
       message_id: string
     }[]) => {
-      console.log('render messages', messages)
       const msgComp: Array<JSX.Element> = []
       messages.forEach((m: {
         content: string,

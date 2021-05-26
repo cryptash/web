@@ -21,11 +21,10 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
   switch (action.type) {
     case 'login/done': {
       localStorage.setItem('token', action.payload.token)
-      return state
+      return {...state}
     }
     case 'chat/message/create': {
       const chat = state.chats.filter(c => c.chat_id === action.payload.chat_id)
-      console.log(chat)
       if (chat[0]) {
         const i = state.chats.indexOf(chat[0])
         chat[0].messages[0] = {
@@ -41,7 +40,7 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
           state.chats.unshift(chat[0])
         }
       }
-      return state
+      return {...state}
     }
     case 'user/get_info/done': {
       return action.payload

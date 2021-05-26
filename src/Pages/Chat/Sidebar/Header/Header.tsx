@@ -10,7 +10,6 @@ const SidebarHeader = (props: {
 }) => {
   return (<>
     <div className={'chat_sidebar__header'} onClick={(_: any) => {
-      console.log('click')
       props.setOpen()
     }}>
       <UserPicture username={props.user.username} picture={props.user.picture}/>

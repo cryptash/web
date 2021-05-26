@@ -31,7 +31,7 @@ const searchReducer = (state: SearchFilter, action: Action) => {
                     ...state, 
                     [action.payload.type]: action.payload.filter
                 }
-        case 'CHANGE_CHATS': 
+        case 'CHANGE_CHATS':
             return {
                 ...state,
                 chats: action.payload.chats

@@ -29,12 +29,11 @@ const ChatCard: FunctionComponent<{chat: ChatResponse}> = (props) => {
         return decryptMessage(localStorage.getItem('key'),chat.messages[0].content, chat.user.pub_key).text
       }
       catch (e) {
-        console.info(e.text)
         return ''
       }
     }
     return ''
-  }, [chat.messages, chat.user.pub_key]);
+  }, [chat.messages[0], chat.user.pub_key]);
   const handleClick = (_: any) => {
     if (!chat.chat_id) {
       dispatch.sync(createChat({user_id: chat.user.user_id}))
