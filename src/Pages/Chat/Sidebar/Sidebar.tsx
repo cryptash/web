@@ -21,7 +21,6 @@ const Sidebar = () => {
   <SearchProvider>
     <div className={`chat_sidebar ${isOpened ? 'opened' : 'closed'}`}>
       <SidebarHeader user={{username: user.username, picture: user.picture}} setOpen={() => {
-        console.log(!isOpened)
         setOpen(!isOpened)
         setOpenedByUser(!isOpenedByUser)
       }}/>

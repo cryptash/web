@@ -25,7 +25,6 @@ const SidebarSearch = (props: {
   }, [search]);
 
   const handleSearch = (e: {target: {value: string}}) => {
-    console.log(e.target.value)
     search.dispatch({type: 'CHANGE_FILTER', payload: {
       type: 'users',
       filter: e.target.value

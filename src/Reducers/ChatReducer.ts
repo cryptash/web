@@ -46,7 +46,6 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
       }
     }
     case 'chat/messages/send': {
-      console.log(action.payload)
       state.messages.push({
         content: action.payload.content,
         read: false,
@@ -54,7 +53,6 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         message_id: '',
         fromMe: true
       })
-      console.log(state.messages)
       return {...state}
     }
     case 'chat/message/setId': {
@@ -85,7 +83,6 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
     }
     case 'chat/set_id': {
       state.chat_id = action.payload.id
-      console.log(state)
       return {...state}
     }
     case 'chat/message/read': {

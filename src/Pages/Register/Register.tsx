@@ -16,7 +16,6 @@ const Register: React.FunctionComponent = () => {
   const [isSame, setSame] = useState(false)
   let history = useHistory();
   const handleChange = (e: any) => {
-    console.log(e.target.name, e.target.value)
     if (e.target.name === 'verify_password') {
         if (e.target.value === credentials.password) {
           setSame(true)

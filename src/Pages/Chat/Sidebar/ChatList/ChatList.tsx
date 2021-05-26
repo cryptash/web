@@ -3,7 +3,6 @@ import ChatCard from './ChatCard'
 import {nanoid} from 'nanoid'
 import './ChatList.scss'
 import { useSearch } from '../../../../Contexts/SearchReducer'
-import {useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../Reducers";
 import {connector, Props} from "../../../../Logux/connect";
@@ -12,7 +11,6 @@ const ChatList = (props: Props) => {
   const chats = useSelector((state: RootState) => state.userReducer.chats )
   const listener = () => {
     const chatArray: Array<React.FunctionComponentElement<{chat: ChatResponse}>> = []
-    console.log(chats, search.state.chats)
     if (search.state.chats[0])
       search.state.chats.forEach(user => {
         chatArray.push(<ChatCard chat={{

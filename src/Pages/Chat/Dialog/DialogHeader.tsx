@@ -5,7 +5,6 @@ const DialogHeader: FunctionComponent<{
   username: string,
   picture: string
 }> = (props) => {
-  console.log(props)
   return <>
     <div className={'chat_dialog__header'}>
 

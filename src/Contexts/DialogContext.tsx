@@ -27,7 +27,6 @@ const DialogContext = React.createContext<
 >(undefined)
 const dialogReducer = (state: DialogState, action: Action) => {
     const data = action.payload
-    console.log(action)
     switch (action.type) {
         case 'ADD_MESSAGE': {
             console.log('NEW MESSAGE')
