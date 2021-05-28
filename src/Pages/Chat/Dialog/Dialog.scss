@@ -82,6 +82,7 @@
   }
 }
 .chat_dialog__input {
+  position: relative;
   height: 50px;
   display: flex;
   margin-top: 5px;
@@ -126,7 +127,7 @@
 .emoji-mart {
   position: absolute;
   bottom: 55px;
-  left: 35%;
+  left: 10px;
   width: 290px !important;
   &-bar:last-child {
     display: none;
