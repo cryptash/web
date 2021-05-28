@@ -3,12 +3,12 @@ import ChatCard from './ChatCard'
 import { nanoid } from 'nanoid'
 import './ChatList.scss'
 import { useSearch } from '../../../../Contexts/SearchReducer'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { RootState } from '../../../../Reducers'
-import { connector, Props } from '../../../../Logux/connect'
-const ChatList = (props: Props) => {
+const ChatList = (props: {
+  chats: ChatResponse[]
+}) => {
   const search = useSearch()
-  const chats = useSelector((state: RootState) => state.userReducer.chats)
   const listener = () => {
     const chatArray: Array<
       React.FunctionComponentElement<{ chat: ChatResponse }>
@@ -26,7 +26,7 @@ const ChatList = (props: Props) => {
           />
         )
       })
-    props.user.chats.forEach((chat: any) => {
+    props.chats.forEach((chat: any) => {
       if (search.state.users) {
         if (
           chat.user.username
@@ -47,4 +47,14 @@ const ChatList = (props: Props) => {
     </>
   )
 }
-export default connector(ChatList)
+export default connect(
+  (state: RootState, ownProps) => {
+    return {
+      chats: [...state.userReducer.chats],
+    }
+  },
+  (dispatch) => {
+    return {}
+  }
+)(ChatList)
+
