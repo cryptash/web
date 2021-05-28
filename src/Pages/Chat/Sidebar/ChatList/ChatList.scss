@@ -49,6 +49,7 @@
         width: 100%;
         overflow: hidden;
         overflow-wrap: break-word;
+        white-space: nowrap;
         max-height: 24px;
         text-overflow: ellipsis;
       }
