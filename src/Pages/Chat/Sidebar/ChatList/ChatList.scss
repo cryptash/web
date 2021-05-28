@@ -14,6 +14,9 @@
     flex-wrap: wrap;
     margin: 0 auto;
     padding: 10px;
+    &.active {
+      background: #F3F7FF;
+    }
     &:hover {
       background: #F3F7FF;
       cursor: pointer;

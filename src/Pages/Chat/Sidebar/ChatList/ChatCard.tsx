@@ -8,11 +8,15 @@ import { useHistory } from 'react-router-dom';
 import {useDispatch} from "@logux/redux";
 import {createChat} from "../../../../Reducers";
 import store from "../../../../Logux/store";
+import {useParams} from "react-router";
 
 const ChatCard: FunctionComponent<{chat: ChatResponse}> = (props) => {
   const {chat} = props
   let history = useHistory();
   const dispatch = useDispatch()
+  const params: {
+    id: string
+  } = useParams()
   useEffect(() => {
     store.client.log.type('chat/create/done', (action: {
       type: 'chat/create/done',
@@ -43,7 +47,7 @@ const ChatCard: FunctionComponent<{chat: ChatResponse}> = (props) => {
     }
   }
   return <>
-    <div className={'chat_list__card'} onClick={(e) => handleClick(e)}>
+    <div className={`chat_list__card ${params.id === props.chat.chat_id ? 'active' : ''}`} onClick={(e) => handleClick(e)}>
       <UserPicture username={chat.user.username} picture={chat.user.picture}/>
       <div className={'right'}>
         <div className={'chat_list__card___top'}>
