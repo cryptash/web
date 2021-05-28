@@ -11,10 +11,10 @@ import { RootState } from '../../../Reducers'
 const Sidebar = () => {
   const screen = useScreen()
   const user = useSelector((state: RootState) => state.userReducer)
-  const [isOpened, setOpen] = useState(screen.state.width > 700)
+  const [isOpened, setOpen] = useState(screen.state.width > 900)
   const [isOpenedByUser, setOpenedByUser] = useState(false)
   useEffect(() => {
-    if (!isOpenedByUser) setOpen(window.innerWidth > 700)
+    if (!isOpenedByUser) setOpen(window.innerWidth > 900)
   }, [screen.state.width])
   return (
     <>
