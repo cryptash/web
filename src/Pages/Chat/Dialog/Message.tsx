@@ -16,14 +16,13 @@ const Message: React.FunctionComponent<{
   id: string
   subscribeToScroll: Function
 }> = (props) => {
-  const pub_key = useSelector((state: RootState) => state.chatReducer.pub_key)
   let content:string = useMemo(() => {
     try {
-      return decryptMessage(localStorage.getItem('key'), props.content, pub_key).text
+      return decryptMessage(localStorage.getItem('key'), props.content, props.pub_key).text
     } catch (error) {
       return ''
     }
-  }, [props.content, pub_key]);
+  }, [props.content, props.pub_key]);
   const [isRead, setRead] = useState(props.isRead)
   const messageRef = useRef<HTMLDivElement>(null)
   const isActionSent = useRef(false)

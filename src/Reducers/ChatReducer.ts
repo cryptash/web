@@ -23,12 +23,6 @@ const initialState: ChatState = {
 const chatReducer = (state = initialState, action: {type: string, payload?: any, id?: string}) => {
   const data = action.payload
   switch (action.type) {
-    case 'chat/message/add': {
-      console.log('NEW MESSAGE')
-      state.messages.push(...data)
-      return {...state}
-    }
-
     case 'chat/load_messages/done': {
       state.messages = [...data.messages, ...state.messages]
       state.pub_key = data.pub_key
@@ -61,10 +55,10 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         if (state.read_messages.includes(action.payload.id))
           state.messages[state.messages.length - 1].read = true
       }
-      return state
+      return {...state}
     }
     case 'chat/message/create': {
-      if (state.chat_id === action.payload.chat_id && action.payload.from !== localStorage.getItem('user_id')) {
+      if (state.chat_id === action.payload.chat_id) {
         if (!state.messages.filter(m => action.payload.message_id === m.message_id)[0]) {
           state.messages.push({
             content: action.payload.content,
