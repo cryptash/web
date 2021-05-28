@@ -5,21 +5,22 @@ import MessageInput from "./MessageInput";
 import { useParams } from "react-router";
 import DialogHeader from "./DialogHeader";
 import {useDispatch, useSubscription} from "@logux/redux";
-import {useSelector} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {changeChat, getMessages, RootState, setChatId} from "../../../Reducers";
 import store from "../../../Logux/store";
-import {connector} from "../../../Logux/connect";
 import Message from "./Message";
 import * as MessageTyping from "../../../Typings/Message";
 import {nanoid} from "nanoid";
-const Dialog: FunctionComponent = () => {
+const Dialog: FunctionComponent<{
+  chat_id:string
+}> = (props) => {
   let params: {id: string} = useParams()
   const dispatch = useDispatch()
   const page = useRef(0)
   const prevScrollHeight = useRef(0)
   const [isRequested, setRequested] = useState(false)
-  const isSubscribing = useSubscription([`chat/${params.id}`]);
-  const chat = useSelector((state: RootState) => state.chatReducer)
+  const isSubscribing = useSubscription(props.chat_id ? [`chat/${props.chat_id}`] : []);
+  let chat = useSelector((state: RootState) => state.chatReducer)
   const [msg, setMsg] = useState<Array<JSX.Element>>([])
   const messagesDiv = useRef<HTMLDivElement>(null)
   const messages = useRef<Array<JSX.Element>>([])
@@ -86,7 +87,7 @@ const Dialog: FunctionComponent = () => {
       }
     })
     return listener
-  },[renderMessages])
+  },[renderMessages, chat.pub_key])
   useEffect(() => {
     const listener = store.client.log.type('chat/message/create', (action: {
       type: 'chat/message/create',
@@ -125,6 +126,12 @@ const Dialog: FunctionComponent = () => {
     return listener
   },[chat.chat_id, chat.pub_key])
 
+
+  useEffect(() => {
+    messages.current = []
+  }, [props.chat_id]);
+
+
   const scrollDown = () => {
     if (messagesDiv.current && messagesDiv.current.scrollTop < messagesDiv.current.scrollHeight - 300 - window.innerHeight)
       messagesDiv.current?.scrollTo(0, messagesDiv.current?.scrollHeight)
@@ -153,4 +160,8 @@ const Dialog: FunctionComponent = () => {
     </div>
   </>
 }
-export default Dialog
+export default connect((state:RootState, ownProps) => {
+  return {
+    chat_id: state.chatReducer.chat_id
+  }
+}, dispatch => {return {}})(Dialog)
