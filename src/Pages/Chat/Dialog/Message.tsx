@@ -80,7 +80,8 @@ const Message: React.FunctionComponent<{
       if (split[0] !== '') res.push(<span>{split[0]}</span>)
       res.push(
         <a
-          rel={'noopener'}
+          rel={'noopener noreferrer'}
+          target={"_blank"}
           href={url.includes('http') ? url : 'https://' + url}
         >
           <span className={'chat_dialog__messages-message_top-bubble--link'}>
