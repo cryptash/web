@@ -1,4 +1,4 @@
-import {ChatResponse} from './ChatReponse'
+import { ChatResponse } from './ChatReponse'
 export interface UserState {
   username: string
   user_id: string

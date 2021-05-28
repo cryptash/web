@@ -1,7 +1,7 @@
 import { CrossTabClient, log } from '@logux/client'
 import { createStoreCreator } from '@logux/redux'
-import config from "../config";
-import rootReducer from "../Reducers";
+import config from '../config'
+import rootReducer from '../Reducers'
 
 let userId = localStorage.getItem('user_id') || 'anonymous'
 let token = localStorage.getItem('token') || ''

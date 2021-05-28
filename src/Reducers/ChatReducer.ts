@@ -1,15 +1,14 @@
-import {Message} from "../Typings/Message";
+import { Message } from '../Typings/Message'
 
 export type ChatState = {
-  messages: Message[],
-  username: string,
-  pub_key: string,
-  picture: string,
-  user_id: string,
-  chat_id: string,
+  messages: Message[]
+  username: string
+  pub_key: string
+  picture: string
+  user_id: string
+  chat_id: string
   read_messages: string[]
 }
-
 
 const initialState: ChatState = {
   username: '',
@@ -20,13 +19,16 @@ const initialState: ChatState = {
   messages: [],
   read_messages: []
 }
-const chatReducer = (state = initialState, action: {type: string, payload?: any, id?: string}) => {
+const chatReducer = (
+  state = initialState,
+  action: { type: string; payload?: any; id?: string }
+) => {
   const data = action.payload
   switch (action.type) {
     case 'chat/load_messages/done': {
       state.messages = [...data.messages, ...state.messages]
       state.pub_key = data.pub_key
-      return {...state}
+      return { ...state }
     }
     case 'chat/change': {
       return {
@@ -47,7 +49,7 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         message_id: '',
         fromMe: true
       })
-      return {...state}
+      return { ...state }
     }
     case 'chat/message/setId': {
       if (state.chat_id === action.payload.chat_id) {
@@ -55,11 +57,15 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
         if (state.read_messages.includes(action.payload.id))
           state.messages[state.messages.length - 1].read = true
       }
-      return {...state}
+      return { ...state }
     }
     case 'chat/message/create': {
       if (state.chat_id === action.payload.chat_id) {
-        if (!state.messages.filter(m => action.payload.message_id === m.message_id)[0]) {
+        if (
+          !state.messages.filter(
+            (m) => action.payload.message_id === m.message_id
+          )[0]
+        ) {
           state.messages.push({
             content: action.payload.content,
             read: action.payload.read,
@@ -69,32 +75,35 @@ const chatReducer = (state = initialState, action: {type: string, payload?: any,
           })
         }
       }
-      return {...state}
+      return { ...state }
     }
     case 'chat/change_key': {
       state.pub_key = action.payload
-      return {...state}
+      return { ...state }
     }
     case 'chat/set_id': {
       state.chat_id = action.payload.id
-      return {...state}
+      return { ...state }
     }
     case 'chat/message/read': {
       if (action.payload.chat_id === state.chat_id) {
-        const message = state.messages.filter(m => m.message_id === action.payload.message_id)[0]
+        const message = state.messages.filter(
+          (m) => m.message_id === action.payload.message_id
+        )[0]
         if (message)
-          state.messages.filter(m => m.message_id === action.payload.message_id)[0].read = true
-        else
-          state.read_messages.push(action.payload.message_id)
+          state.messages.filter(
+            (m) => m.message_id === action.payload.message_id
+          )[0].read = true
+        else state.read_messages.push(action.payload.message_id)
       }
       return state
     }
     case 'chat/data/set': {
-      return {...state, ...data}
+      return { ...state, ...data }
     }
     default: {
       return state
     }
   }
 }
-export {chatReducer}
+export { chatReducer }

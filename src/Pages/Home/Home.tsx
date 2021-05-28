@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {Redirect, useHistory} from 'react-router-dom';
-import Preloader from "../../Components/Preloader/Preloader";
+import React, { useState, useEffect } from 'react'
+import { Redirect, useHistory } from 'react-router-dom'
+import Preloader from '../../Components/Preloader/Preloader'
 import config from '../../config'
-import Chat from '../Chat/Chat';
-import {badge, Client} from "@logux/client";
-import store from "../../Logux/store";
-import {badgeStyles} from "@logux/client/badge/styles";
-import {Provider} from "react-redux";
-badge(store.client, {messages: {
+import Chat from '../Chat/Chat'
+import { badge, Client } from '@logux/client'
+import store from '../../Logux/store'
+import { badgeStyles } from '@logux/client/badge/styles'
+import { Provider } from 'react-redux'
+badge(store.client, {
+  messages: {
     synchronized: 'Everything is up to date',
     disconnected: 'No connection to server.',
     wait: 'Sending...',
@@ -16,9 +17,11 @@ badge(store.client, {messages: {
     protocolError: 'Error occurred. Please, contact admins!',
     syncError: 'Error while syncing...',
     denied: 'Access denied'
-  }, styles: badgeStyles })
+  },
+  styles: badgeStyles
+})
 
-const Home= () => {
+const Home = () => {
   const [isLoggined, setLoginned] = useState(0)
   const token = localStorage.getItem('token')
   const history = useHistory()
@@ -46,7 +49,10 @@ const Home= () => {
         }
       })
       client.start()
-      client.log.add({ type: 'user/check', token: localStorage.getItem('token')}, { sync: true })
+      client.log.add(
+        { type: 'user/check', token: localStorage.getItem('token') },
+        { sync: true }
+      )
     } else {
       signOut()
     }
@@ -57,14 +63,13 @@ const Home= () => {
   }
 
   if (isLoggined === 1) {
-    return <Redirect to={'/login'}/>
+    return <Redirect to={'/login'} />
   }
   return (
     <Provider store={store}>
-      <Chat/>
+      <Chat />
     </Provider>
   )
-  
 }
 
-export default Home;
+export default Home

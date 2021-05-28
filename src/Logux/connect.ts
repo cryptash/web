@@ -1,14 +1,20 @@
-import {changeChat, getMessages, RootState, sendMessage, setChatId} from "../Reducers";
-import {LoguxDispatch} from "@logux/redux/create-store-creator";
-import {Action} from "redux";
-import {connect, ConnectedProps} from "react-redux";
+import {
+  changeChat,
+  getMessages,
+  RootState,
+  sendMessage,
+  setChatId
+} from '../Reducers'
+import { LoguxDispatch } from '@logux/redux/create-store-creator'
+import { Action } from 'redux'
+import { connect, ConnectedProps } from 'react-redux'
 
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.userReducer,
     chat: state.chatReducer
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch: LoguxDispatch<Action>) => ({
   changeChat: (id: string) => {
@@ -21,9 +27,9 @@ const mapDispatchToProps = (dispatch: LoguxDispatch<Action>) => ({
     dispatch(setChatId({ id }))
   },
   sendMessage: (content: string, chat_id: string, from: string) => {
-    dispatch.sync(sendMessage({content, chat_id, from}))
+    dispatch.sync(sendMessage({ content, chat_id, from }))
   }
-});
-const connector = connect(mapStateToProps, mapDispatchToProps as any);
-export type Props = ConnectedProps<typeof connector>;
-export {connector}
+})
+const connector = connect(mapStateToProps, mapDispatchToProps as any)
+export type Props = ConnectedProps<typeof connector>
+export { connector }

@@ -1,4 +1,4 @@
-import {ChatResponse} from "../Typings/ChatReponse";
+import { ChatResponse } from '../Typings/ChatReponse'
 
 interface UserState {
   username: string
@@ -8,7 +8,6 @@ interface UserState {
   chats: ChatResponse[]
 }
 
-
 const initialState: UserState = {
   user_id: '',
   username: '',
@@ -17,14 +16,19 @@ const initialState: UserState = {
   chats: []
 }
 
-const userReducer = (state = initialState, action: {type: string, payload: any}) => {
+const userReducer = (
+  state = initialState,
+  action: { type: string; payload: any }
+) => {
   switch (action.type) {
     case 'login/done': {
       localStorage.setItem('token', action.payload.token)
-      return {...state}
+      return { ...state }
     }
     case 'chat/message/create': {
-      const chat = state.chats.filter(c => c.chat_id === action.payload.chat_id)
+      const chat = state.chats.filter(
+        (c) => c.chat_id === action.payload.chat_id
+      )
       if (chat[0]) {
         const i = state.chats.indexOf(chat[0])
         chat[0].messages[0] = {
@@ -36,11 +40,11 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
         }
         chat[0].messageAt = action.payload.date
         if (i !== 0) {
-          state.chats = state.chats.filter(x => x !== chat[0])
+          state.chats = state.chats.filter((x) => x !== chat[0])
           state.chats.unshift(chat[0])
         }
       }
-      return {...state}
+      return { ...state }
     }
     case 'user/get_info/done': {
       return action.payload
@@ -50,4 +54,4 @@ const userReducer = (state = initialState, action: {type: string, payload: any})
     }
   }
 }
-export {userReducer}
+export { userReducer }
