@@ -146,3 +146,10 @@
     left: 10px;
   }
 }
+
+@media not all and (min-resolution:.001dpcm) { // detect Safari
+  .chat_dialog__messages {
+    scroll-padding: 0;
+    scroll-snap-type: unset;
+  }
+}
