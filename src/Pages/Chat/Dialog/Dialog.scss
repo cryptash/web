@@ -5,6 +5,7 @@
   padding: 10px 5px;
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
+  scroll-padding: 10px;
   &-message:last-child {
     scroll-snap-align: end;
     margin-bottom: 20px;
