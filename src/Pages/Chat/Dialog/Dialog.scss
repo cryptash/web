@@ -1,6 +1,6 @@
 .chat_dialog__messages {
   overflow-y: auto;
-  height: calc(100% - 10px - 52px);
+  height: calc(100% - 10px - 52px - 50px);
   width: 98%;
   padding: 10px 5px;
   overscroll-behavior-y: contain;

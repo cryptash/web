@@ -18,6 +18,9 @@ const Dialog: FunctionComponent<{
   chat_id: string
   messages: MessageTyping.Message[]
   pub_key: string
+  status: string
+  username: string
+  picture: string
 }> = (props) => {
   let params: { id: string } = useParams()
   const dispatch = useDispatch()
@@ -128,7 +131,7 @@ const Dialog: FunctionComponent<{
   return (
     <>
       <div className={'chat_dialog'}>
-        <DialogHeader username={chat.username} picture={chat.picture} />
+        <DialogHeader username={props.username} picture={props.picture} status={props.status}/>
         <div
           className={'chat_dialog__messages'}
           onScroll={(e) => scrollCallback(e)}
@@ -146,7 +149,10 @@ export default connect(
     return {
       chat_id: state.chatReducer.chat_id,
       messages: [...state.chatReducer.messages],
-      pub_key: state.chatReducer.pub_key
+      pub_key: state.chatReducer.pub_key,
+      status: state.chatReducer.status,
+      username: state.chatReducer.username,
+      picture: state.chatReducer.picture
     }
   },
   (dispatch) => {

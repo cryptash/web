@@ -1,0 +1,47 @@
+.chat_dialog__header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 2px solid #f7f7f7;
+  &___picture {
+    display: flex;
+    .profile_picture {
+      margin: auto;
+    }
+  }
+  &___info {
+    display: flex;
+    margin-left: 10px;
+    flex-direction: column;
+    &-username {
+      margin-top: 5px;
+      text-align: center;
+    }
+    &-status {
+      display: flex;
+      flex-direction: row;
+      width: 70px;
+      margin: auto;
+      * {
+        margin: auto;
+      }
+      .oval {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.oval {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+}
+.grey {
+  background-color: grey;
+}
+.green {
+  background-color: #00C980;
+}

@@ -8,6 +8,7 @@ export type ChatState = {
   user_id: string
   chat_id: string
   read_messages: string[]
+  status: 'OFFLINE' | 'ONLINE' | 'TYPING'
 }
 
 const initialState: ChatState = {
@@ -17,7 +18,8 @@ const initialState: ChatState = {
   pub_key: '',
   chat_id: '',
   messages: [],
-  read_messages: []
+  read_messages: [],
+  status: 'OFFLINE'
 }
 const chatReducer = (
   state = initialState,
@@ -28,6 +30,9 @@ const chatReducer = (
     case 'chat/load_messages/done': {
       state.messages = [...data.messages, ...state.messages]
       state.pub_key = data.pub_key
+      state.picture = data.picture
+      state.username = data.username
+      state.status = data.status
       return { ...state }
     }
     case 'chat/change': {
@@ -38,7 +43,8 @@ const chatReducer = (
         pub_key: '',
         chat_id: action.payload.id,
         messages: [],
-        read_messages: []
+        read_messages: [],
+        status: 'OFFLINE'
       }
     }
     case 'chat/messages/send': {
