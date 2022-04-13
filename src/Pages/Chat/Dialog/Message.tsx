@@ -70,6 +70,7 @@ const Message: React.FunctionComponent<{
     '([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+',
     'g'
   )
+  if (!content) return null
   const urls = content.match(urlRE)
   const generateMessageWithUrl = () => {
     let c = content

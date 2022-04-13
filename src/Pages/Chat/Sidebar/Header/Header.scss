@@ -8,15 +8,15 @@
   align-items: center;
   &___username {
     margin: auto;
-    margin-left: 50px;
+    margin-left: 40px;
     font-size: 20px;
     transition: opacity 1s ease;
   }
   &___signout {
     cursor: pointer;
-    margin-right: 30px;
+    margin-right: 5%;
   }
   div {
-    margin-left: 60px;
+    margin-left: auto;
   }
 }

@@ -62,7 +62,7 @@ const Register: React.FunctionComponent = () => {
     let client = new Client({
       subprotocol: '1.0.0',
       server: config.socket_url,
-      userId: 'anonymous'
+      userId: 'anonymous',
     })
     client.on('add', (action: any) => {
       if (action.type === 'register/done') {

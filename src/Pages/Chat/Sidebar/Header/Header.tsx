@@ -15,7 +15,8 @@ const SidebarHeader = (props: {
       <div
         className={'chat_sidebar__header'}
         onClick={(_: any) => {
-          props.setOpen()
+          if (window.innerWidth < 900)
+            props.setOpen()
         }}
       >
         <UserPicture
