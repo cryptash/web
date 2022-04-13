@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import './Login.scss'
 import config from '../../config'
@@ -46,6 +46,10 @@ const Login: React.FunctionComponent = () => {
       [e.target.name]: e.target.value
     })
   }
+  useEffect(() => {
+    if (localStorage.getItem('user_id') && localStorage.getItem('token'))
+      history.push('/')
+  }, [])
   const history = useHistory()
   return (
     <>

@@ -48,7 +48,7 @@ const Register: React.FunctionComponent = () => {
   ) {
     if (!password || !username) return
     if (!isSame) return
-    if (!doesMeetReqs) return
+    if (!doesMeetReqs) alert("8 to 31 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character")
     if (username.length < 3) {
       alert('Username must be at least 3 symbols')
       return
@@ -101,6 +101,7 @@ const Register: React.FunctionComponent = () => {
           name={'password'}
           type={'password'}
           placeholder={'Password'}
+          autoComplete={'new-password'}
           className={`register_main__form___password ${
             doesMeetReqs ? '' : 'red-outline'
           }`}
@@ -109,6 +110,7 @@ const Register: React.FunctionComponent = () => {
         <input
           name={'verify_password'}
           type={'password'}
+          autoComplete={'new-password'}
           placeholder={'Verify Password'}
           className={`register_main__form___password ${
             isSame ? '' : 'red-outline'
