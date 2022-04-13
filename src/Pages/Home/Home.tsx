@@ -7,19 +7,6 @@ import { badge, Client } from '@logux/client'
 import store from '../../Logux/store'
 import { badgeStyles } from '@logux/client/badge/styles'
 import { Provider } from 'react-redux'
-badge(store.client, {
-  messages: {
-    synchronized: 'Everything is up to date',
-    disconnected: 'No connection to server.',
-    wait: 'Sending...',
-    sending: 'Sending...',
-    error: 'Error occurred. Please, try again!',
-    protocolError: 'Error occurred. Please, contact admins!',
-    syncError: 'Error while syncing...',
-    denied: 'Access denied'
-  },
-  styles: badgeStyles
-})
 
 const Home = () => {
   const [isLoggined, setLoginned] = useState(0)
