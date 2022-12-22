@@ -4,7 +4,7 @@ import UserPicture from '../../../../Components/UserPicture/UserPicture'
 import { ChatResponse } from '../../../../Typings/ChatReponse'
 import { decryptMessage } from '../../../../Utils/decrypt'
 import { formatTime } from '../../../../Utils/formatDate'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from '@logux/redux'
 import { createChat } from '../../../../Reducers'
 import store from '../../../../Logux/store'
@@ -12,11 +12,9 @@ import { useParams } from 'react-router'
 
 const ChatCard: FunctionComponent<{ chat: ChatResponse }> = (props) => {
   const { chat } = props
-  let history = useHistory()
+  let navigate = useNavigate()
   const dispatch = useDispatch()
-  const params: {
-    id: string
-  } = useParams()
+  const params = useParams()
   useEffect(() => {
     store.client.log.type(
       'chat/create/done',
@@ -29,10 +27,10 @@ const ChatCard: FunctionComponent<{ chat: ChatResponse }> = (props) => {
         },
         _
       ) => {
-        history.push(`/${action.payload.chat_id}`)
+        navigate(`/${action.payload.chat_id}`)
       }
     )
-  }, [history])
+  }, [navigate])
   const text = useMemo(() => {
     if (chat.messages[0]) {
       try {
@@ -51,7 +49,7 @@ const ChatCard: FunctionComponent<{ chat: ChatResponse }> = (props) => {
     if (!chat.chat_id) {
       dispatch.sync(createChat({ user_id: chat.user.user_id }))
     } else {
-      history.push(`/${chat.chat_id}`)
+      navigate(`/${chat.chat_id}`)
     }
   }
   return (

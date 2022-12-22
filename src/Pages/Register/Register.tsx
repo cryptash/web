@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './Register.scss'
 import config from '../../config'
 import { generateKeyPair } from '../../Utils/keysUtils'
@@ -14,7 +14,7 @@ const Register: React.FunctionComponent = () => {
   })
   const [doesMeetReqs, setMeetReq] = useState(false)
   const [isSame, setSame] = useState(false)
-  let history = useHistory()
+  let navigate = useNavigate()
   const handleChange = (e: any) => {
     if (e.target.name === 'verify_password') {
       if (e.target.value === credentials.password) {
@@ -70,7 +70,7 @@ const Register: React.FunctionComponent = () => {
         localStorage.setItem('token', action.token)
         localStorage.setItem('key', key.private_key)
         store.client.changeUser(action.user_id, action.token)
-        history.push(`/`)
+        navigate(`/`)
       } else if (action.type === 'logux/undo') {
         alert(action.reason)
       }

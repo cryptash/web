@@ -22,7 +22,7 @@ const Dialog: FunctionComponent<{
   username: string
   picture: string
 }> = (props) => {
-  let params: { id: string } = useParams()
+  let params = useParams()
   const dispatch = useDispatch()
   const page = useRef(0)
   const prevScrollHeight = useRef(0)
@@ -40,11 +40,11 @@ const Dialog: FunctionComponent<{
   }
 
   useEffect(() => {
-    dispatch(setChatId({ id: params.id }))
+    dispatch(setChatId({ id: params.id!!}))
   }, [dispatch, params.id])
 
   useEffect(() => {
-    dispatch(changeChat({ id: params.id }))
+    dispatch(changeChat({ id: params.id!! }))
   }, [dispatch, params.id])
 
   const scrollCallback = (e: any) => {
@@ -59,7 +59,7 @@ const Dialog: FunctionComponent<{
           : 0
         setRequested(true)
         dispatch
-          .sync(getMessages({ pg: page.current, chat_id: params.id }))
+          .sync(getMessages({ pg: page.current, chat_id: params.id!! }))
           .then(() => setRequested(false))
       }
     }

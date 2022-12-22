@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './Login.scss'
 import config from '../../config'
 import { AES } from 'crypto-js'
@@ -40,6 +40,9 @@ const Login: React.FunctionComponent = () => {
     password: '',
     key: ''
   })
+
+  const navigate = useNavigate()
+
   const handleChange = (e: any) => {
     setCredentials({
       ...credentials,
@@ -48,9 +51,9 @@ const Login: React.FunctionComponent = () => {
   }
   useEffect(() => {
     if (localStorage.getItem('user_id') && localStorage.getItem('token'))
-      history.push('/')
-  }, [])
-  const history = useHistory()
+      navigate('/')
+  }, [navigate])
+ 
   return (
     <>
       <div className="login_main">
@@ -67,9 +70,9 @@ const Login: React.FunctionComponent = () => {
             className={'login_main__form'}
             onSubmit={(e) => {
               e.preventDefault()
-              login(credentials.username, credentials.password, (p: string) =>
-                history.push(p)
-              )
+              login(credentials.username, credentials.password, (p: string) => {
+                navigate(p)
+              })
             }}
           >
             <>

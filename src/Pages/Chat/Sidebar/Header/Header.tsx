@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import UserPicture from '../../../../Components/UserPicture/UserPicture'
 import './Header.scss'
 
@@ -9,7 +9,7 @@ const SidebarHeader = (props: {
   }
   setOpen: () => void
 }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   return (
     <>
       <div
@@ -32,7 +32,7 @@ const SidebarHeader = (props: {
               localStorage.removeItem('key')
               localStorage.removeItem('token')
               localStorage.removeItem('user_id')
-              history.push('/login')
+              navigate('/login')
               document.location.reload()
           }
         }>

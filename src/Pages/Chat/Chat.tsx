@@ -12,7 +12,7 @@ import { badge } from '@logux/client'
 import { badgeStyles } from '@logux/client/badge/styles'
 
 const Chat: React.FunctionComponent = () => {
-  const params: { id: string } = useParams()
+  const params = useParams()
   const isSubscribing = useSubscription([
     `user/${localStorage.getItem('user_id')}`
   ])

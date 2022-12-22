@@ -3,8 +3,9 @@ import { encryptMessage } from '../../../Utils/encrypt'
 import { RootState, sendMessage } from '../../../Reducers'
 import { useSelector } from 'react-redux'
 import { useDispatch } from '@logux/redux'
-import 'emoji-mart/css/emoji-mart.css'
-import { EmojiData, Picker } from 'emoji-mart'
+import EmojiMartData from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
+import { Emoji } from 'emoji-mart'
 
 const MessageInput = (props: { scrollDown: () => void }) => {
   const [message, setMessage] = useState('')
@@ -37,7 +38,7 @@ const MessageInput = (props: { scrollDown: () => void }) => {
     inputRef.current?.focus()
     setShowPicker(false)
   }
-  const handleEmojiSelect = (emoji: EmojiData) => {
+  const handleEmojiSelect = (emoji: Emoji) => {
     if (inputRef.current) {
       if ('native' in emoji) {
         inputRef.current.value += emoji.native
@@ -58,7 +59,11 @@ const MessageInput = (props: { scrollDown: () => void }) => {
               <Picker
                 emojiSize={24}
                 perLine={8}
-                onSelect={(emoji) => handleEmojiSelect(emoji)}
+                data={EmojiMartData}
+                dynamicWidth
+                onEmojiSelect={(emoji: Emoji) => handleEmojiSelect(emoji)}
+                //onClickOutside={setShowPicker(!showPicker)}
+                previewPosition={'none'}
               />
             ) : null}
             <span

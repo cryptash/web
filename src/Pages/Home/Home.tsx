@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import Preloader from '../../Components/Preloader/Preloader'
 import config from '../../config'
 import Chat from '../Chat/Chat'
-import { badge, Client } from '@logux/client'
+import { Client } from '@logux/client'
 import store from '../../Logux/store'
-import { badgeStyles } from '@logux/client/badge/styles'
 import { Provider } from 'react-redux'
 
 const Home = () => {
   const [isLoggined, setLoginned] = useState(0)
   const token = localStorage.getItem('token')
-  const history = useHistory()
+  const navigate = useNavigate()
   const signOut = () => {
-    history.push('/login')
+    navigate('/login')
     setLoginned(1)
     localStorage.removeItem('key')
     localStorage.removeItem('token')
@@ -50,7 +49,7 @@ const Home = () => {
   }
 
   if (isLoggined === 1) {
-    return <Redirect to={'/login'} />
+    return <Navigate to={'/login'} />
   }
   return (
     <Provider store={store}>
